@@ -84,6 +84,7 @@ def notify(func):
     def wrapper(self, *args, **kwargs):
         func(self, *args, **kwargs)
         self._store.save_history()
+        self._store.tree.global_render()
 
     return wrapper
 
@@ -94,8 +95,8 @@ class Store:
         for obj in self.slices.values():
             obj.register_store(self)
         self.slices_history: list[dict[str, dict[str, str]]] = [format_slices(slices)]
-        # Ici erreur car dans Tree on utilise la var globale store qui n'est pas fini d'init
-        # puisqu'on est encore dedans
+
+    def start(self):
         self.tree = Tree()
 
     def save_history(self) -> None:
@@ -137,7 +138,8 @@ class User(Subject):
 pizza = Pizza("XL", "Peperonni")
 user = User("darikol")
 store = Store({"pizza": pizza, "user": user})
-store.slices["pizza"].change()
+store.start()
+#store.slices["pizza"].change()
 # print(store.slices["pizza"].taste)
 # print(store.slices_history)
 
@@ -145,6 +147,7 @@ store.slices["pizza"].change()
 # arbre = Tree()
 # print(arbre.leaves)
 
+"""
 zozo = document.querySelector("#ok")
 print("btn", zozo)
 zozo.innerText = "cou"
@@ -158,3 +161,5 @@ def color_change(event):
 
 
 zozo.addEventListener("click", color_change)
+
+"""
