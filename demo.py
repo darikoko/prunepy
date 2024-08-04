@@ -1,4 +1,5 @@
 import copy
+from pyscript import window, document
 
 
 def format_slices(slices: dict[str, object]) -> dict[str, dict[str,str]]:
@@ -52,3 +53,7 @@ store = Store({"pizza": pizza, "user": user})
 store.slices["pizza"].change()
 print(store.slices["pizza"].taste)
 print(store.slices_history)
+
+my_element = document.querySelector("#my-id")
+print(my_element.getAttribute('n-text'))
+my_element.innerText = eval(my_element.getAttribute('n-text'))
