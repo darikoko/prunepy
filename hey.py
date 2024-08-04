@@ -64,13 +64,10 @@ class Leaf:
             elif directive_name == "n-show":
                 self.html_element.hidden = not eval(directive_value)
             elif directive_name == "n-onclick":
-                print("JEXISTE")
-                # cc = create_proxy(Leaf.handle_event)
                 self.html_element.addEventListener("click", Leaf.handle_event)
             else:
                 print("oups")
-        
-        print("oxxxxxxxxxxxxkokkok")
+
 
 
 # Store et compooanie
@@ -122,7 +119,6 @@ class Pizza(Subject):
     @notify
     def change(self):
         self.taste = "Salmon"
-        print("WHO")
 
 
 class User(Subject):
@@ -139,27 +135,3 @@ pizza = Pizza("XL", "Peperonni")
 user = User("darikol")
 store = Store({"pizza": pizza, "user": user})
 store.start()
-#store.slices["pizza"].change()
-# print(store.slices["pizza"].taste)
-# print(store.slices_history)
-
-
-# arbre = Tree()
-# print(arbre.leaves)
-
-"""
-zozo = document.querySelector("#ok")
-print("btn", zozo)
-zozo.innerText = "cou"
-
-
-def color_change(event):
-    zozo.setAttribute("style", "background-color:red;")
-    print(event.target.innerText)
-    print(event.type, "XXXX")
-    store.slices["pizza"].change()
-
-
-zozo.addEventListener("click", color_change)
-
-"""
