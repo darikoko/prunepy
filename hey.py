@@ -1,11 +1,10 @@
-import copy
 from pyscript import window, document
 
 # Store et compooanie
 
 
 def format_slices(slices: dict[str, object]) -> dict[str, dict[str, str]]:
-    return {key: copy.deepcopy(value).__dict__ for (key, value) in slices.items()}
+    return {key: value.__dict__ for (key, value) in slices.items()}.copy()
 
 
 def notify(func):
@@ -25,6 +24,7 @@ class Store:
 
     def save_history(self) -> None:
         self.slices_history.append(format_slices(self.slices))
+        print(self.slices_history)
 
 
 # Les observables
@@ -93,6 +93,7 @@ class Leaf:
         self.directives : dict[str, str] = {}
         self.find_directives()
 
+
     def find_directives(self):
         for directive in ZEPHYR_DIRECTIVES:
             if (attribute_value := self.html_element.getAttribute(directive)) is not None:
@@ -101,16 +102,14 @@ class Leaf:
 
     def render(self):
         for directive_name, directive_value in self.directives.items():
-            match directive_name:
-                case "n-text":
-                    self.html_element.innerText = eval(directive_value)
-                case "n-html":
-                    self.html_element.innerHTML = eval(directive_value)
-                case "n-show":
-                    self.html_element.hidden = not eval(directive_value)
-                case _ :
-                    print("oups")
-
+            if directive_name == "n-text":
+                self.html_element.innerText = eval(directive_value)
+            elif directive_name =="n-html":
+                self.html_element.innerHTML = eval(directive_value)
+            elif directive_name =="n-show":
+                self.html_element.hidden = not eval(directive_value)
+            else:
+                print("oups")
 
 pizza = Pizza("XL", "Peperonni")
 user = User("darikol")
