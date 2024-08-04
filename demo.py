@@ -6,15 +6,15 @@ def format_slices(slices: dict[str, object]) -> dict[str, dict[str,str]]:
 
 def log_method_call(func):
     def wrapper(self, *args, **kwargs):
-        print(f"Calling {func.__name__} with instance {self}...")
-        result = func(self, *args, **kwargs)
-        print(f"{func.__name__} finished. Result: {result}")
-        return result
+        func(self, *args, **kwargs)
+        self._store.save_history()
     return wrapper
 
 class Store:
     def __init__(self, slices: dict[str, object]) -> None:
         self.slices = slices
+        for obj in self.slices.values():
+            obj.register_store(self)
         self.slices_history : list[dict[str, dict[str,str]]] = [format_slices(slices)]
 
     def alert(self, text:str):
@@ -25,14 +25,12 @@ class Store:
 
 
 class Subject:
-    store: Store | None = None
+    _store: Store | None = None
     
     def register_store(self, store:Store):
-        self.store = store
+        self._store = store
 
-    def notify(self):
-        store.alert("NOTIFICATION")
-        store.save_history()
+ 
 
 
 class Pizza(Subject):
@@ -40,9 +38,9 @@ class Pizza(Subject):
         self.name = name
         self.taste = taste
 
+    @log_method_call
     def change(self):
         self.taste = "Salmon"
-        self.notify()
 
 
 class User(Subject):
