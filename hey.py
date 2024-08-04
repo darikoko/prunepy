@@ -1,4 +1,5 @@
 from pyscript import window, document
+from pyscript.ffi import create_proxy
 
 # Store et compooanie
 
@@ -27,6 +28,7 @@ class Store:
         print(self.slices_history)
 
 
+
 # Les observables
 
 
@@ -45,6 +47,7 @@ class Pizza(Subject):
     @notify
     def change(self):
         self.taste = "Salmon"
+        print("WHO")
 
 
 class User(Subject):
@@ -64,6 +67,7 @@ ZEPHYR_DIRECTIVES = [
         "n-text",
         "n-html",
         "n-show",
+        "n-onclick",
     ]
 
 
@@ -100,16 +104,33 @@ class Leaf:
                 self.directives[directive] = attribute_value
         print(self.directives)
 
+    @staticmethod
+    def handle_event(event):
+        if event.type == "click":
+            function = event.target.getAttribute("n-onclick")
+            eval(function)
+            print(function)
+            pass
+        pass
+
     def render(self):
         for directive_name, directive_value in self.directives.items():
+            print(directive_name)
             if directive_name == "n-text":
                 self.html_element.innerText = eval(directive_value)
             elif directive_name =="n-html":
                 self.html_element.innerHTML = eval(directive_value)
             elif directive_name =="n-show":
                 self.html_element.hidden = not eval(directive_value)
+            elif directive_name =="n-onclick":
+                print("JEXISTE")
+                #cc = create_proxy(Leaf.handle_event)
+                self.html_element.addEventListener("click", Leaf.handle_event)
             else:
                 print("oups")
+
+
+
 
 pizza = Pizza("XL", "Peperonni")
 user = User("darikol")
@@ -119,6 +140,21 @@ store.slices["pizza"].change()
 # print(store.slices_history)
 
 
-
 arbre = Tree()
 print(arbre.leaves)
+
+zozo = document.querySelector("#ok")
+print("btn", zozo)
+zozo.innerText = "cou"
+
+def color_change(event):
+    zozo.setAttribute("style", "background-color:red;")
+    print(event.target.innerText)
+    print(event.type,"XXXX")
+    store.slices["pizza"].change()
+
+zozo.addEventListener("click", color_change)
+
+
+
+
