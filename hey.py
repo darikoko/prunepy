@@ -4,99 +4,15 @@ from pyscript.ffi import create_proxy
 
 # Arbre et feuilles
 # L'arbre de représentation
-ZEPHYR_DIRECTIVES = [
-    "n-text",
-    "n-html",
-    "n-show",
-]
 
-JS_EVENTS = [
-    "abort",
-    "afterprint",
-    "animationend",
-    "animationiteration",
-    "animationstart",
-    "beforeprint",
-    "beforeunload",
-    "blur",
-    "canplay",
-    "canplaythrough",
-    "change",
-    "click",
-    "contextmenu",
-    "copy",
-    "cut",
-    "dblclick",
-    "drag",
-    "dragend",
-    "dragenter",
-    "dragleave",
-    "dragover",
-    "dragstart",
-    "drop",
-    "durationchange",
-    "ended",
-    "error",
-    "focus",
-    "focusin",
-    "focusout",
-    "fullscreenchange",
-    "fullscreenerror",
-    "hashchange",
-    "input",
-    "invalid",
-    "keydown",
-    "keypress",
-    "keyup",
-    "load",
-    "loadeddata",
-    "loadedmetadata",
-    "loadstart",
-    "message",
-    "mousedown",
-    "mouseenter",
-    "mouseleave",
-    "mousemove",
-    "mouseover",
-    "mouseout",
-    "mouseup",
-    "mousewheel",
-    "offline",
-    "online",
-    "open",
-    "pagehide",
-    "pageshow",
-    "paste",
-    "pause",
-    "play",
-    "playing",
-    "popstate",
-    "progress",
-    "ratechange",
-    "resize",
-    "reset",
-    "scroll",
-    "search",
-    "seeked",
-    "seeking",
-    "select",
-    "stalled",
-    "storage",
-    "submit",
-    "suspend",
-    "timeupdate",
-    "toggle",
-    "touchcancel",
-    "touchend",
-    "touchmove",
-    "touchstart",
-    "transitionend",
-    "unload",
-    "volumechange",
-    "waiting",
-    "wheel",
-]
+def is_zephyr(element) -> bool:
+    for attribute in element.attributes:
+        if attribute.name.startswith('n-'):
+                return True
+    return False
 
+def get_zephyr_attributes(element) -> list[str]:
+    return [attribute.name for attribute in element.attributes if attribute.name.startswith('n-')]
 
 class Tree:
     def __init__(self) -> None:
@@ -104,12 +20,12 @@ class Tree:
         self.build_tree()
 
     def build_tree(self):
-        selector = ", ".join(
-            f"[{directive}]" for directive in ZEPHYR_DIRECTIVES
-        ) + "," + ", ".join(f"[n-on{event}]" for event in JS_EVENTS)
-        print(selector)
-        html_elements = document.querySelectorAll(selector)
-        for html_element in html_elements:
+        all_elements = document.getElementsByTagName('*')
+        matched_elements = []
+        for el in all_elements:
+            if is_zephyr(el):
+                matched_elements.append(el)
+        for html_element in matched_elements:
             leaf = Leaf(html_element)
             self.leaves.append(leaf)
         self.global_render()
@@ -127,8 +43,7 @@ class Leaf:
         self.find_directives()
 
     def find_directives(self):
-        # ici on itere pas sur JSEVENTS donc ils sont ignorés
-        for directive in ZEPHYR_DIRECTIVES + [f"n-on{event}" for event in JS_EVENTS]:
+        for directive in get_zephyr_attributes(self.html_element):
             if (
                 attribute_value := self.html_element.getAttribute(directive)
             ) is not None:
