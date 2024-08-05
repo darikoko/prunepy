@@ -57,7 +57,7 @@ class Leaf:
 
     @staticmethod
     def handle_event(event):
-        function = event.target.getAttribute("n-on" + event.type)
+        function = event.target.getAttribute("n-on:" + event.type)
         print(function)
         eval(function, {"store": store}, {"event": event})
 
@@ -70,9 +70,12 @@ class Leaf:
                 self.html_element.innerHTML = eval(directive_value)
             elif directive_name == "n-show":
                 self.html_element.hidden = not eval(directive_value)
-            elif directive_name.startswith("n-on"):
-                event_type = directive_name.replace("n-on", "")
+            elif directive_name.startswith("n-on:"):
+                event_type = directive_name.replace("n-on:", "")
                 self.html_element.addEventListener(event_type, Leaf.handle_event)
+            elif directive_name.startswith("n-bind:"):
+                attribute_to_bind = directive_name.replace("n-bind:", "")
+                self.html_element.setAttribute(attribute_to_bind, eval(directive_value))
             else:
                 print("oups")
 
