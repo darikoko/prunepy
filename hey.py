@@ -80,8 +80,7 @@ class Leaf:
 # Store et companie
 
 
-def format_slices(slices: dict[str, object]) -> dict[str, dict[str, str]]:
-    return {key: value.__dict__ for (key, value) in slices.items()}.copy()
+
 
 
 def notify(func):
@@ -98,13 +97,17 @@ class Store:
         self.slices = slices
         for obj in self.slices.values():
             obj.register_store(self)
-        self.slices_history: list[dict[str, dict[str, str]]] = [format_slices(slices)]
+        self.slices_history: list[dict[str, dict[str, str]]] = [self.format_slices(slices)]
+
+    @staticmethod
+    def format_slices(slices: dict[str, object]) -> dict[str, dict[str, str]]:
+        return {key: value.__dict__ for (key, value) in slices.items()}.copy()
 
     def start(self):
         self.tree = Tree()
 
     def save_history(self) -> None:
-        self.slices_history.append(format_slices(self.slices))
+        self.slices_history.append(self.format_slices(self.slices))
         print(self.slices_history)
 
 
