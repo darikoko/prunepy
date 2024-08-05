@@ -14,7 +14,7 @@
     <p n-html="store.slices['pizza'].taste">helloo</p>
     <button id="ok">demo</button>
     <button n-onclick="store.slices['user'].toggle()">true</button>
-    <input  type="text" id="english" placeholder="Type English here..." />
+    <input  type="text" n-oninput="store.slices['user'].toggle()"  />
     <div id="output"></div>
     <script type="mpy" src="./hey.py" config="./pyscript.json"></script>
   </body>

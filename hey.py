@@ -9,6 +9,7 @@ ZEPHYR_DIRECTIVES = [
     "n-html",
     "n-show",
     "n-onclick",
+    "n-oninput",
 ]
 
 
@@ -47,12 +48,9 @@ class Leaf:
 
     @staticmethod
     def handle_event(event):
-        if event.type == "click":
-            function = event.target.getAttribute("n-onclick")
-            eval(function)
-            print(function)
-            pass
-        pass
+        function = event.target.getAttribute("n-on" + event.type)
+        eval(function)
+        print(function)
 
     def render(self):
         for directive_name, directive_value in self.directives.items():
@@ -63,14 +61,15 @@ class Leaf:
                 self.html_element.innerHTML = eval(directive_value)
             elif directive_name == "n-show":
                 self.html_element.hidden = not eval(directive_value)
-            elif directive_name == "n-onclick":
-                self.html_element.addEventListener("click", Leaf.handle_event)
+            elif directive_name.startswith("n-on"):
+                event_type = directive_name.replace("n-on", "")
+                self.html_element.addEventListener(event_type, Leaf.handle_event)
             else:
                 print("oups")
 
 
 
-# Store et compooanie
+# Store et companie
 
 
 def format_slices(slices: dict[str, object]) -> dict[str, dict[str, str]]:
