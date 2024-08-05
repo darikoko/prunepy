@@ -16,7 +16,7 @@
   <p n-html="store.slices['pizza'].taste">helloo</p>
   <button id="ok">demo</button>
   <button n-on:click="store.slices['user'].toggle()">true</button>
-  <input type="text" n-bind:placeholder="store.slices['pizza'].taste" n-on:input="store.slices['pizza'].change_by_value(event.target.value)" />
+  <input n-bind:class="'coucou'" class="salut bonjour ciao  j " type="text" n-bind:placeholder="store.slices['pizza'].taste" n-on:input="store.slices['pizza'].change_by_value(event.target.value)" />
   <div id="output"></div>
   <script type="mpy" src="./hey.py" config="./package.json"></script>
 

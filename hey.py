@@ -38,6 +38,8 @@ class Leaf:
     def __init__(self, html_element) -> None:
         self.html_element = html_element
         self.directives: dict[str, str] = {}
+        self.initial_html_classes = self.html_element.classList.value
+        print(self.initial_html_classes,"init")
         self.find_directives()
 
     def get_zephyr_attributes(self) -> list[str]:
@@ -54,6 +56,8 @@ class Leaf:
             ) is not None:
                 self.directives[directive] = attribute_value
         print(self.directives)
+
+
 
     @staticmethod
     def handle_event(event):
@@ -75,7 +79,10 @@ class Leaf:
                 self.html_element.addEventListener(event_type, Leaf.handle_event)
             elif directive_name.startswith("n-bind:"):
                 attribute_to_bind = directive_name.replace("n-bind:", "")
-                self.html_element.setAttribute(attribute_to_bind, eval(directive_value))
+                if attribute_to_bind == "class":
+                    self.html_element.setAttribute("class", self.initial_html_classes + eval(directive_value))
+                else:
+                    self.html_element.setAttribute(attribute_to_bind, eval(directive_value))
             else:
                 print("oups")
 
