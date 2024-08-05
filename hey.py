@@ -21,13 +21,10 @@ class Tree:
 
     def build_tree(self):
         all_elements = document.getElementsByTagName('*')
-        matched_elements = []
         for el in all_elements:
             if is_zephyr(el):
-                matched_elements.append(el)
-        for html_element in matched_elements:
-            leaf = Leaf(html_element)
-            self.leaves.append(leaf)
+                leaf = Leaf(el)
+                self.leaves.append(leaf)
         self.global_render()
 
     def global_render(self):
