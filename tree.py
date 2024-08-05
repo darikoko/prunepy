@@ -1,18 +1,11 @@
-import datetime
 from pyscript import document
-from oh import SAY
-
-print(SAY)
-
-# Arbre et feuilles
-# L'arbre de représentation
-
 
 class Tree:
-    def __init__(self) -> None:
+    def __init__(self,store) -> None:
         self.leaves: list[Leaf] = []
         self.tree_scope: dict[str, any] = {}
         self.build_tree()
+        self.store = store
 
     def is_zephyr(self, element) -> bool:
         for attribute in element.attributes:
@@ -46,7 +39,7 @@ class Leaf:
         print(self.initial_html_classes, "init")
         self.find_directives()
 
-    def get_prune_attributes(self) -> list[str]:
+    def get_zephyr_attributes(self) -> list[str]:
         return [
             attribute.name
             for attribute in self.html_element.attributes
@@ -54,7 +47,7 @@ class Leaf:
         ]
 
     def find_directives(self):
-        for directive in self.get_prune_attributes():
+        for directive in self.get_zephyr_attributes():
             if (
                 attribute_value := self.html_element.getAttribute(directive)
             ) is not None:
@@ -106,79 +99,3 @@ class Leaf:
         print(leaf_scope, "LEAF SCOPE")
         return leaf_scope
 
-
-# Store et companie
-
-
-def notify(func):
-    def wrapper(self, *args, **kwargs):
-        func(self, *args, **kwargs)
-        self._store.save_history()
-        self._store.tree.global_render()
-
-    return wrapper
-
-
-class Store:
-    def __init__(self, slices: dict[str, object]) -> None:
-        self.slices = slices
-        for obj in self.slices.values():
-            obj.register_store(self)
-        self.slices_history: list[dict[str, dict[str, str]]] = [
-            self.format_slices(slices)
-        ]
-
-    @staticmethod
-    def format_slices(slices: dict[str, object]) -> dict[str, dict[str, str]]:
-        return {key: value.__dict__ for (key, value) in slices.items()}.copy()
-
-    def start(self):
-        self.tree = Tree()
-
-    def save_history(self) -> None:
-        self.slices_history.append(self.format_slices(self.slices))
-        print(self.slices_history)
-
-
-# Les observables
-
-
-class Subject:
-    _store: Store | None = None
-
-    def register_store(self, store: Store):
-        self._store = store
-
-
-class Pizza(Subject):
-    def __init__(self, name: str, taste: str) -> None:
-        self.name = name
-        self.taste = taste
-        self.reviews = ["ok", "cool", "super"]
-
-    @notify
-    def change(self):
-        self.taste = "Salmon"
-
-    @notify
-    def change_by_value(self, value: str):
-        self.taste = value
-
-
-class User(Subject):
-    def __init__(self, pseudo: str) -> None:
-        self.pseudo = pseudo
-        self.show = False
-
-    @notify
-    def toggle(self):
-        self.show = not self.show
-
-
-pizza = Pizza("XL", "Peperonni")
-user = User("darikol")
-jack = "salulululsf"
-store = Store({"pizza": pizza, "user": user})
-store.start()
-
-print(datetime.date.today())

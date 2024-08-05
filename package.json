@@ -1,5 +1,6 @@
 {
   "files": {
-    "/oh.py": "./oh.py"
+    "/oh.py": "./oh.py",
+    "/tree.py": "./tree.py"
   }
 }
