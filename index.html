@@ -18,12 +18,7 @@
   <button n-onclick="store.slices['user'].toggle()">true</button>
   <input type="text" n-oninput="store.slices['pizza'].change_by_value(event.target.value)" />
   <div id="output"></div>
-  <mpy-config>
-    {
-    "packages": ["datetime" ]
-    }
-  </mpy-config>
-  <script type="mpy" src="./hey.py"></script>
+  <script type="mpy" src="./hey.py" config="./package.json"></script>
 
 
 </body>

@@ -1,5 +1,8 @@
+import datetime
 from pyscript import document
+from oh import SAY
 
+print(SAY)
 
 # Arbre et feuilles
 # L'arbre de représentation
@@ -144,3 +147,5 @@ user = User("darikol")
 jack = "salulululsf"
 store = Store({"pizza": pizza, "user": user})
 store.start()
+
+print(datetime.date.today())
