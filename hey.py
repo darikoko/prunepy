@@ -1,29 +1,36 @@
-from pyscript import window, document
-from pyscript.ffi import create_proxy
+from pyscript import document
 
 
 # Arbre et feuilles
 # L'arbre de représentation
 
+
 def is_zephyr(element) -> bool:
     for attribute in element.attributes:
-        if attribute.name.startswith('n-'):
-                return True
+        if attribute.name.startswith("n-"):
+            return True
     return False
 
+
 def get_zephyr_attributes(element) -> list[str]:
-    return [attribute.name for attribute in element.attributes if attribute.name.startswith('n-')]
+    return [
+        attribute.name
+        for attribute in element.attributes
+        if attribute.name.startswith("n-")
+    ]
+
 
 class Tree:
     def __init__(self) -> None:
         self.leaves: list[Leaf] = []
         self.build_tree()
 
+    # Peut etre selectionner d'abord les div marquees par un attribut pour alleger le parsing
+    # on pourrait faire un attribut zephyr ou autre
     def build_tree(self):
-        all_elements = document.getElementsByTagName('*')
-        for el in all_elements:
-            if is_zephyr(el):
-                leaf = Leaf(el)
+        for html_element in document.getElementsByTagName("*"):
+            if is_zephyr(html_element):
+                leaf = Leaf(html_element)
                 self.leaves.append(leaf)
         self.global_render()
 
