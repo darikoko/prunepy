@@ -5,31 +5,22 @@ from pyscript import document
 # L'arbre de représentation
 
 
-def is_zephyr(element) -> bool:
-    for attribute in element.attributes:
-        if attribute.name.startswith("n-"):
-            return True
-    return False
-
-
-def get_zephyr_attributes(element) -> list[str]:
-    return [
-        attribute.name
-        for attribute in element.attributes
-        if attribute.name.startswith("n-")
-    ]
-
-
 class Tree:
     def __init__(self) -> None:
         self.leaves: list[Leaf] = []
         self.build_tree()
 
+    def is_zephyr(self, element) -> bool:
+        for attribute in element.attributes:
+            if attribute.name.startswith("n-"):
+                return True
+        return False
+
     # Peut etre selectionner d'abord les div marquees par un attribut pour alleger le parsing
     # on pourrait faire un attribut zephyr ou autre
     def build_tree(self):
         for html_element in document.getElementsByTagName("*"):
-            if is_zephyr(html_element):
+            if self.is_zephyr(html_element):
                 leaf = Leaf(html_element)
                 self.leaves.append(leaf)
         self.global_render()
@@ -46,8 +37,15 @@ class Leaf:
         self.directives: dict[str, str] = {}
         self.find_directives()
 
+    def get_zephyr_attributes(self) -> list[str]:
+        return [
+            attribute.name
+            for attribute in self.html_element.attributes
+            if attribute.name.startswith("n-")
+        ]
+
     def find_directives(self):
-        for directive in get_zephyr_attributes(self.html_element):
+        for directive in self.get_zephyr_attributes():
             if (
                 attribute_value := self.html_element.getAttribute(directive)
             ) is not None:
