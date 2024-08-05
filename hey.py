@@ -14,7 +14,7 @@ class Tree:
         self.tree_scope: dict[str, any] = {}
         self.build_tree()
 
-    def is_zephyr(self, element) -> bool:
+    def is_prune(self, element) -> bool:
         for attribute in element.attributes:
             if attribute.name.startswith("n-"):
                 return True
@@ -24,12 +24,12 @@ class Tree:
     # on pourrait faire un attribut zephyr ou autre
     def build_tree(self):
         for html_element in document.getElementsByTagName("*"):
-            if self.is_zephyr(html_element):
+            if self.is_prune(html_element):
                 leaf = Leaf(html_element)
                 self.leaves.append(leaf)
-        self.global_render()
+        self.mutate_dom()
 
-    def global_render(self):
+    def mutate_dom(self):
         for leaf in self.leaves:
             print(leaf)
             leaf_scope = leaf.render(self.tree_scope)
@@ -114,7 +114,7 @@ def notify(func):
     def wrapper(self, *args, **kwargs):
         func(self, *args, **kwargs)
         self._store.save_history()
-        self._store.tree.global_render()
+        self._store.tree.mutate_dom()
 
     return wrapper
 
