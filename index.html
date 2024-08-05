@@ -14,7 +14,7 @@
     <p n-html="store.slices['pizza'].taste">helloo</p>
     <button id="ok">demo</button>
     <button n-onclick="store.slices['user'].toggle()">true</button>
-    <input  type="text" n-oninput="store.slices['user'].toggle()"  />
+    <input  type="text" n-oninput="store.slices['pizza'].change_by_value(event.target.value)"  />
     <div id="output"></div>
     <script type="mpy" src="./hey.py" config="./pyscript.json"></script>
   </body>

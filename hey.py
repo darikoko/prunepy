@@ -49,8 +49,8 @@ class Leaf:
     @staticmethod
     def handle_event(event):
         function = event.target.getAttribute("n-on" + event.type)
-        eval(function)
         print(function)
+        eval(function, {"store": store}, {"event": event})
 
     def render(self):
         for directive_name, directive_value in self.directives.items():
@@ -66,7 +66,6 @@ class Leaf:
                 self.html_element.addEventListener(event_type, Leaf.handle_event)
             else:
                 print("oups")
-
 
 
 # Store et companie
@@ -119,6 +118,10 @@ class Pizza(Subject):
     def change(self):
         self.taste = "Salmon"
 
+    @notify
+    def change_by_value(self, value: str):
+        self.taste = value
+
 
 class User(Subject):
     def __init__(self, pseudo: str) -> None:
@@ -132,5 +135,6 @@ class User(Subject):
 
 pizza = Pizza("XL", "Peperonni")
 user = User("darikol")
+jack = "salulululsf"
 store = Store({"pizza": pizza, "user": user})
 store.start()
