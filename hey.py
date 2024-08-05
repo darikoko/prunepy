@@ -8,8 +8,93 @@ ZEPHYR_DIRECTIVES = [
     "n-text",
     "n-html",
     "n-show",
-    "n-onclick",
-    "n-oninput",
+]
+
+JS_EVENTS = [
+    "abort",
+    "afterprint",
+    "animationend",
+    "animationiteration",
+    "animationstart",
+    "beforeprint",
+    "beforeunload",
+    "blur",
+    "canplay",
+    "canplaythrough",
+    "change",
+    "click",
+    "contextmenu",
+    "copy",
+    "cut",
+    "dblclick",
+    "drag",
+    "dragend",
+    "dragenter",
+    "dragleave",
+    "dragover",
+    "dragstart",
+    "drop",
+    "durationchange",
+    "ended",
+    "error",
+    "focus",
+    "focusin",
+    "focusout",
+    "fullscreenchange",
+    "fullscreenerror",
+    "hashchange",
+    "input",
+    "invalid",
+    "keydown",
+    "keypress",
+    "keyup",
+    "load",
+    "loadeddata",
+    "loadedmetadata",
+    "loadstart",
+    "message",
+    "mousedown",
+    "mouseenter",
+    "mouseleave",
+    "mousemove",
+    "mouseover",
+    "mouseout",
+    "mouseup",
+    "mousewheel",
+    "offline",
+    "online",
+    "open",
+    "pagehide",
+    "pageshow",
+    "paste",
+    "pause",
+    "play",
+    "playing",
+    "popstate",
+    "progress",
+    "ratechange",
+    "resize",
+    "reset",
+    "scroll",
+    "search",
+    "seeked",
+    "seeking",
+    "select",
+    "stalled",
+    "storage",
+    "submit",
+    "suspend",
+    "timeupdate",
+    "toggle",
+    "touchcancel",
+    "touchend",
+    "touchmove",
+    "touchstart",
+    "transitionend",
+    "unload",
+    "volumechange",
+    "waiting",
+    "wheel",
 ]
 
 
@@ -19,7 +104,10 @@ class Tree:
         self.build_tree()
 
     def build_tree(self):
-        selector = ", ".join(f"[{directive}]" for directive in ZEPHYR_DIRECTIVES)
+        selector = ", ".join(
+            f"[{directive}]" for directive in ZEPHYR_DIRECTIVES
+        ) + "," + ", ".join(f"[n-on{event}]" for event in JS_EVENTS)
+        print(selector)
         html_elements = document.querySelectorAll(selector)
         for html_element in html_elements:
             leaf = Leaf(html_element)
@@ -39,7 +127,8 @@ class Leaf:
         self.find_directives()
 
     def find_directives(self):
-        for directive in ZEPHYR_DIRECTIVES:
+        # ici on itere pas sur JSEVENTS donc ils sont ignorés
+        for directive in ZEPHYR_DIRECTIVES + [f"n-on{event}" for event in JS_EVENTS]:
             if (
                 attribute_value := self.html_element.getAttribute(directive)
             ) is not None:
