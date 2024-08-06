@@ -10,20 +10,19 @@
 </head>
 
 <body{inside_loop_text[0]:i}>
-  <h1>Polyglot 🦜 💬 🇬🇧 ➡️ 🏴‍☠️</h1>
-  <p n-text="store.slices['pizza'].taste" id="my-id">Translate English into Pirate speak...</p>
-  <p n-show="store.slices['user'].show">helloo</p>
-  <p n-html="store.slices['pizza'].taste">helloo</p>
+
+<h1>Polyglot 🦜 💬 🇬🇧 ➡️ 🏴‍☠️</h1>
+  <p n-text="prune.slices['pizza'].taste" id="my-id">Translate English into Pirate speak...</p>
+  <p n-show="prune.slices['user'].show">helloo</p>
+  <p n-html="prune.slices['pizza'].taste">helloo</p>
   <button id="ok">demo</button>
-  <button n-on:click="store.slices['user'].toggle()">true</button>
-  <div n-for="review in store.slices['pizza'].reviews" x-for="color in colors">
-    <li n-text="review"></li>
-  </div>
+  <button n-on:click="prune.slices['user'].toggle()">toggle</button>
+  
   <input n-bind:class="'coucou'" class="salut bonjour ciao  j " type="text"
-    n-bind:placeholder="store.slices['pizza'].taste"
-    n-on:input="store.slices['pizza'].change_by_value(event.target.value)" />
+    n-bind:placeholder="prune.slices['pizza'].taste"
+    n-on:input="prune.slices['pizza'].change_by_value(event.target.value)" />
   <div id="output"></div>
-  <script type="mpy" src="./hey.py" config="./package.json"></script>
+  <script type="mpy" src="/src/demo.py" config="./package.json"></script>
 
 
   </body>
