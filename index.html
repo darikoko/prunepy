@@ -11,13 +11,17 @@
 
 <body{inside_loop_text[0]:i}>
 
-<h1>Polyglot 🦜 💬 🇬🇧 ➡️ 🏴‍☠️</h1>
+  <h1>Polyglot 🦜 💬 🇬🇧 ➡️ 🏴‍☠️</h1>
   <p n-text="prune.slices['pizza'].taste" id="my-id">Translate English into Pirate speak...</p>
   <p n-show="prune.slices['user'].show">helloo</p>
   <p n-html="prune.slices['pizza'].taste">helloo</p>
   <button id="ok">demo</button>
   <button n-on:click="prune.slices['user'].toggle()">toggle</button>
-  
+
+  <div n-for="review in prune.slices['pizza'].reviews" x-for="color in colors">
+    <li n-text="review"></li>
+  </div>
+
   <input n-bind:class="'coucou'" class="salut bonjour ciao  j " type="text"
     n-bind:placeholder="prune.slices['pizza'].taste"
     n-on:input="prune.slices['pizza'].change_by_value(event.target.value)" />

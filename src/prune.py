@@ -16,7 +16,7 @@ class Prune:
     def __init__(self, slices: dict[str, object]) -> None:
         self.store = Store(slices)
         self.register_app_to_slices()
-        self.tree = Tree(self.store)
+        self.tree = Tree()
         Prune.global_scope = {"prune":self.store}
         self.tree_scope = {}
         self.render()
@@ -48,7 +48,6 @@ class Prune:
                         directive_value, Prune.global_scope, self.tree_scope
                     )
                 elif directive_name.startswith("n-on:"):
-                    print("ONNN")
                     event_type = directive_name.replace("n-on:", "")
                     leave.html_element.addEventListener(event_type, self.handle_event)
                 elif directive_name.startswith("n-bind:"):
@@ -65,12 +64,15 @@ class Prune:
                             eval(directive_value, Prune.global_scope, self.tree_scope),
                         )
                 elif directive_name == "n-for":
-                    splitted_for = directive_value.split(" in ")
+                    iteration_name, list_name = directive_value.split(" in ")
                     list_element = eval(
-                        splitted_for[1], Prune.global_scope, self.tree_scope
+                        list_name, Prune.global_scope, self.tree_scope
                     )
-                    initial_inner_html = leave.html_element.innerHTML
+                    initial_inner_html = leave.html_element.firstElementChild.innerHTML
+                    #self.tree.leaves.append(L)
+                    print(initial_inner_html, "INITIAL")
                     for i in list_element:
-                        leaf_scope[splitted_for[0]] = i
+                        leaf_scope[iteration_name] = i
+                        print(i)
                 else:
                     pass
