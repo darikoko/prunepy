@@ -123,13 +123,16 @@ def notify(func):
 # Ne devrait pas avoir connaissance de Tree, la gestion des evenements devrait
 # se faire pas un objet qui wrapperait Store et Tree
 class Store:
+    slices_history: list[dict[str, dict[str, str]]] = []
+
     def __init__(self, slices: dict[str, object]) -> None:
         self.slices = slices
-        for obj in self.slices.values():
-            obj._store = self
-        self.slices_history: list[dict[str, dict[str, str]]] = [
-            self.format_slices(slices)
-        ]
+        self.register_store_to_slices()
+        self.save_history()
+
+    def register_store_to_slices(self):
+        for slice in self.slices.values():
+            slice._store = self
 
     @staticmethod
     def format_slices(slices: dict[str, object]) -> dict[str, dict[str, str]]:
@@ -146,10 +149,7 @@ class Store:
 # Les observables
 
 
-
-
-
-class Pizza():
+class Pizza:
     def __init__(self, name: str, taste: str) -> None:
         self.name = name
         self.taste = taste
@@ -164,7 +164,7 @@ class Pizza():
         self.taste = value
 
 
-class User():
+class User:
     def __init__(self, pseudo: str) -> None:
         self.pseudo = pseudo
         self.show = False
