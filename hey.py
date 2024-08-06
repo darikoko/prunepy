@@ -1,5 +1,6 @@
 import datetime
 from pyscript import document
+import time
 from oh import SAY
 
 print(SAY)
@@ -119,11 +120,13 @@ def notify(func):
     return wrapper
 
 
+# Ne devrait pas avoir connaissance de Tree, la gestion des evenements devrait
+# se faire pas un objet qui wrapperait Store et Tree
 class Store:
     def __init__(self, slices: dict[str, object]) -> None:
         self.slices = slices
         for obj in self.slices.values():
-            obj.register_store(self)
+            obj._store = self
         self.slices_history: list[dict[str, dict[str, str]]] = [
             self.format_slices(slices)
         ]
@@ -143,14 +146,10 @@ class Store:
 # Les observables
 
 
-class Subject:
-    _store: Store | None = None
-
-    def register_store(self, store: Store):
-        self._store = store
 
 
-class Pizza(Subject):
+
+class Pizza():
     def __init__(self, name: str, taste: str) -> None:
         self.name = name
         self.taste = taste
@@ -165,7 +164,7 @@ class Pizza(Subject):
         self.taste = value
 
 
-class User(Subject):
+class User():
     def __init__(self, pseudo: str) -> None:
         self.pseudo = pseudo
         self.show = False
@@ -181,4 +180,5 @@ jack = "salulululsf"
 store = Store({"pizza": pizza, "user": user})
 store.start()
 
+print(time.localtime())
 print(datetime.date.today())
