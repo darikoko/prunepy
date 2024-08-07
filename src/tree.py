@@ -36,6 +36,7 @@ class Leaf:
         self.html_element = html_element
         self.directives: dict[str, str] = {}
         self.initial_html_classes = self.html_element.classList.value
+        self.initial_n_for_content = None
         self.find_directives()
 
     def get_prune_attributes(self) -> list[str]:
@@ -44,6 +45,8 @@ class Leaf:
             for attribute in self.html_element.attributes
             if attribute.name.startswith("n-")
         ]
+
+
 
     def find_directives(self):
         for directive in self.get_prune_attributes():

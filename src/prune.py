@@ -1,5 +1,5 @@
 from store import Store
-from tree import Tree
+from tree import Tree, Leaf
 
 
 def notify(func):
@@ -32,7 +32,6 @@ class Prune:
 
 
     def render(self):
-        leaf_scope = {}
         for leave in self.tree.leaves:
             for directive_name, directive_value in leave.directives.items():
                 if directive_name == "n-text":
@@ -68,11 +67,20 @@ class Prune:
                     list_element = eval(
                         list_name, Prune.global_scope, self.tree_scope
                     )
-                    initial_inner_html = leave.html_element.firstElementChild.innerHTML
-                    #self.tree.leaves.append(L)
-                    print(initial_inner_html, "INITIAL")
-                    for i in list_element:
-                        leaf_scope[iteration_name] = i
-                        print(i)
+                    for index,i in enumerate(list_element):
+                        clone = leave.html_element.content.cloneNode(True)
+                        leave.html_element.after(clone)
+                        print(clone)
+                        #leave.html_element.appendChild(leave.initial_n_for_content)
+                        """
+                        self.tree_scope[iteration_name] = list_element[index]
+                        print(self.tree_scope)
+                        clone = leave.html_element.firstElementChild.cloneNode(True)
+                        clone.id = i
+                        clone.setAttribute("n-for-iteration", iteration_name)
+                        print(clone)
+                        leave.html_element.after(clone)
+                        print(i,"JE ME LANCE")
+                        """
                 else:
                     pass

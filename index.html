@@ -18,15 +18,15 @@
   <button id="ok">demo</button>
   <button n-on:click="prune.slices['user'].toggle()">toggle</button>
 
-  <div n-for="review in prune.slices['pizza'].reviews" x-for="color in colors">
-    <li n-text="review"></li>
-  </div>
+  <template n-for="review in prune.slices['pizza'].reviews" x-for="color in colors">
+    <li n-text="review">Zinzin</li>
+  </template>
 
   <input n-bind:class="'coucou'" class="salut bonjour ciao  j " type="text"
     n-bind:placeholder="prune.slices['pizza'].taste"
     n-on:input="prune.slices['pizza'].change_by_value(event.target.value)" />
   <div id="output"></div>
-  <script type="mpy" src="/src/demo.py" config="./package.json"></script>
+  <script type="mpy" src="/src/demo.py" config="./package.json" async></script>
 
 
   </body>
