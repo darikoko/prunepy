@@ -1,3 +1,5 @@
+
+
 class Store:
     slices_history: list[dict[str, dict[str, str]]] = []
 

@@ -1,5 +1,5 @@
 from prune import Prune, notify
-from pyscript import fetch
+from pyscript import fetch, document
 import asyncio
 
 
@@ -28,28 +28,23 @@ class User:
     def toggle(self):
         self.show = not self.show
 
+class Todo:
+    def __init__(self) -> None:
+        self.tasks:list[str] = []
+
+    @notify
+    def add_task(self, input) -> None:
+        self.tasks.append(input.value)
+        input.value = ""
 
 pizza = Pizza("XL", "Peperonni")
 user = User("darikol")
-prune = Prune({"pizza": pizza, "user": user})
+todo = Todo()
+prunoe = Prune({"pizza": pizza, "user": user, "todo":todo})
 
-async def oula():
-    response = await fetch("http://nimbus/api/")
-    if response.ok:
-        data = await response.text()
-        print(data)
-        return data
-    else:
-        return "Oups"
 
-print(fetch("http://nimbus/api/"),"Chouette")
 
-response = await fetch("https://jsonplaceholder.typicode.com/todos/1")
-if response.ok:
-    data = await response.text()
-    print(data)
-else:
-    print(response.status)
+
 
 
 
