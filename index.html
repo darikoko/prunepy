@@ -15,23 +15,23 @@
   <h1>TODO LIST</h1>
 
   <input id="task" type="text" placeholder="add item..." n-ref="taskinput">
-  <button n-on:click="store['todo'].add_task(refs['taskinput'])">Add task</button>
+  <button n-on:click="store.todo.add_task(refs['taskinput'])">Add task</button>
 
-  <template n-for="task in store['todo'].tasks">
+  <template n-for="task in store.todo.tasks">
     <li n-text="task"></li>
   </template>
-  <p n-show="store['user'].show">helloo</p>
-  <p n-html="store['pizza'].taste">helloo</p>
+  <p n-show="store.user.show">helloo</p>
+  <p n-html="store.pizza.taste">helloo</p>
   <button id="ok">demo</button>
-  <button n-on:click="store['user'].toggle()">toggle</button>
+  <button n-on:click="store.user.toggle()">toggle</button>
 
-  <template n-for="review in store['pizza'].reviews">
+  <template n-for="review in store.pizza.reviews">
     <li n-text="review">Zinzin</li>
   </template>
 
   <input n-bind:class="'coucou'" class="salut bonjour ciao  j " type="text"
-    n-bind:placeholder="store['pizza'].taste"
-    n-on:input="store['pizza'].change_by_value(event.target.value)" />
+    n-bind:placeholder="store.pizza.taste"
+    n-on:input="store.pizza.change_by_value(event.target.value)" />
   <div id="output"></div>
   <!-- Dont forget to add async attribute to script tag to use await etc in pyscript-->
   <script type="mpy" src="/src/demo.py" config="./package.json" async></script>

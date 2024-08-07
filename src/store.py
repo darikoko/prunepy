@@ -3,9 +3,11 @@
 class Store:
     slices_history: list[dict[str, dict[str, str]]] = []
 
-    def __init__(self, slices: dict[str, object]) -> None:
-        self.slices = slices
-        self.save_history()
+    def __init__(self, **kwargs) -> None:
+        #self.slices = slices
+        for key, value in kwargs.items():
+            setattr(self, key, value)
+        #self.save_history()
 
     @staticmethod
     def format_slices(slices: dict[str, object]) -> dict[str, dict[str, str]]:

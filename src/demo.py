@@ -40,7 +40,7 @@ class Todo:
 pizza = Pizza("XL", "Peperonni")
 user = User("darikol")
 todo = Todo()
-prunoe = Prune({"pizza": pizza, "user": user, "todo":todo})
+prunoe = Prune( pizza=pizza, user=user, todo=todo)
 
 
 

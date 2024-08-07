@@ -6,7 +6,7 @@ from tree import Tree, Leaf
 def notify(func):
     def wrapper(self, *args, **kwargs):
         func(self, *args, **kwargs)
-        self._app.store.save_history()
+        #self._app.store.save_history()
         self._app.render()
 
     return wrapper
@@ -17,16 +17,19 @@ def notify(func):
 class Prune:
     global_scope = {}
 
-    def __init__(self, slices: dict[str, object]) -> None:
-        self.store = Store(slices)
+    def __init__(self, **kwargs) -> None:
+        self.store = Store(**kwargs)
         self.register_app_to_slices()
         self.tree = Tree()
-        Prune.global_scope = {"store": self.store.slices, "refs": {}}
+        Prune.global_scope = {"store": self.store, "refs": {}}
         self.tree_scope = {}
         self.render()
 
     def register_app_to_slices(self):
-        for slice in self.store.slices.values():
+        for attr in self.store.__dict__:
+            slice = getattr(self.store, attr)
+            print(getattr(self.store, attr))
+            print(attr)
             slice._app = self
 
     @staticmethod
