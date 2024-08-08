@@ -32,7 +32,9 @@ class Prune:
     @staticmethod
     def handle_event(event):
         function = event.target.getAttribute("n-on:" + event.type)
-        eval("print(store.todo.tasks)", Prune.global_scope, {"event": event})
+        # Au cas ou la syntaxe @ est utlilisée
+        if function is None:
+            function = event.target.getAttribute("@" + event.type)
         eval(function, Prune.global_scope, {"event": event})
 
     def remove_latest_leaves(self):
@@ -69,8 +71,8 @@ class Prune:
                 event_type = directive_name.replace("n-on:", "").replace("@", "")
                 print(event_type, "EVENT TYPE")
                 leaf.html_element.addEventListener(event_type, self.handle_event)
-            elif directive_name.startswith("n-bind:"):
-                attribute_to_bind = directive_name.replace("n-bind:", "")
+            elif directive_name.startswith("n-bind:") or directive_name.startswith(":"):
+                attribute_to_bind = directive_name.replace("n-bind:", "").replace(":","")
                 if attribute_to_bind == "class":
                     leaf.html_element.setAttribute(
                         "class",

@@ -29,12 +29,17 @@
     <li n-text="review">Zinzin</li>
   </template>
 
-  <input n-bind:class="'coucou'" class="salut bonjour ciao  j " type="text"
+  <input n-bind:class="'red' if store.user.show else ''" class="salut bonjour ciao  j " type="text"
     n-bind:placeholder="store.pizza.taste"
     n-on:input="store.pizza.change_by_value(event.target.value)" />
   <div id="output"></div>
   <!-- Dont forget to add async attribute to script tag to use await etc in pyscript-->
-  <script type="mpy" src="/src/demo.py" config="./package.json" async></script>
+  <script type="mpy" src="/src/demo.mpy" config="./package.json" async></script>
+  <style>
+    .red{
+      background:red;
+    }
+  </style>
 
 
   </body>

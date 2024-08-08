@@ -41,6 +41,12 @@ class Todo:
 pizza = Pizza("XL", "Peperonni")
 user = User("darikol")
 todo = Todo()
+print(f"{todo=}")
+a = 12
+b = 14
+c = a if b < 10 else 20
+for (i) in (a,b):
+    print(f"{i=}")
 prunoe = Prune( pizza=pizza, user=user, todo=todo)
 
 
