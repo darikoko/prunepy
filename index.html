@@ -15,7 +15,7 @@
   <h1>TODO LIST</h1>
 
   <input id="task" type="text" placeholder="add item..." n-ref="taskinput">
-  <button n-on:click="store.todo.add_task(refs['taskinput'])">Add task</button>
+  <button @click="store.todo.add_task(refs['taskinput'])">Add task</button>
 
   <template n-for="task in store.todo.tasks">
     <li n-text="task"></li>

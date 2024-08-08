@@ -10,7 +10,7 @@ class Tree:
 
     def is_prune(self, element) -> bool:
         for attribute in element.attributes:
-            if attribute.name.startswith("n-"):
+            if attribute.name.startswith("n-") or attribute.name.startswith("@") or attribute.name.startswith(":"):
                 return True
         return False
 
@@ -32,10 +32,23 @@ class Leaf:
         self.find_directives()
 
     def get_prune_attributes(self) -> list[str]:
+        print([
+            attribute.name
+            for attribute in self.html_element.attributes
+            if (
+                attribute.name.startswith("n-")
+                or attribute.name.startswith("@")
+                or attribute.name.startswith(":")
+            )
+        ])
         return [
             attribute.name
             for attribute in self.html_element.attributes
-            if attribute.name.startswith("n-")
+            if (
+                attribute.name.startswith("n-")
+                or attribute.name.startswith("@")
+                or attribute.name.startswith(":")
+            )
         ]
 
     def replace_iteration_variable(self, iteration_name, list_name):
@@ -56,3 +69,4 @@ class Leaf:
                 attribute_value := self.html_element.getAttribute(directive)
             ) is not None:
                 self.directives[directive] = attribute_value
+        print(self.directives)

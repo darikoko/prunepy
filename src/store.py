@@ -1,18 +1,18 @@
 
 
 class Store:
+    # Nécessaire pour le démarrage
     slices_history: list[dict[str, dict[str, str]]] = []
 
     def __init__(self, **kwargs) -> None:
-        #self.slices = slices
         for key, value in kwargs.items():
             setattr(self, key, value)
-        #self.save_history()
+        self.save_history()
 
-    @staticmethod
-    def format_slices(slices: dict[str, object]) -> dict[str, dict[str, str]]:
-        return {key: value.__dict__ for (key, value) in slices.items()}.copy()
+    def format_history(self) -> dict[str, dict[str, str]]:
+        return {key: value.__dict__ for (key, value) in self.__dict__.items()}.copy()
 
     def save_history(self) -> None:
-        self.slices_history.append(self.format_slices(self.slices))
+        self.slices_history.append(self.format_history())
+        print(self.slices_history)
 

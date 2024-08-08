@@ -34,6 +34,7 @@ class Todo:
 
     @notify
     def add_task(self, input) -> None:
+        print("ON GO")
         self.tasks.append(input.value)
         input.value = ""
 
