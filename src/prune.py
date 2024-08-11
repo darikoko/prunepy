@@ -50,7 +50,10 @@ class Prune:
     @staticmethod
     def for_loop_string(iteration_name:str, list_name:str):
         local_scope = extract_loop(iteration_name)
-        text = f"""for {iteration_name} in reversed({list_name}):\n\tclone = template.content.cloneNode(True)\n\tinserted_html_element = template.parentNode.insertBefore(clone.children[0], template.nextSibling)\n\tleaf = Leaf(inserted_html_element)\n\tleaf.local_scope={local_scope}\n\tself.tree.latest_leaves.append(leaf)\n\t"""
+        # chercher dans le content du template tous les elements à parser comme on le fait dans le render normal
+        # le queryselector chope pas ce qu'il y a dans template
+        text = f"""for {iteration_name} in reversed({list_name}):\n\tclone = template.content.cloneNode(True)\n\tinserted_html_element = template.parentNode.insertBefore(clone.children[0], template.nextSibling)\n\tself.tree.build_latest_leaves(inserted_html_element, {local_scope})"""
+        print(text)
         return text
 
     def process_leaf(self, leaf):

@@ -27,7 +27,20 @@
   <button n-on:click="store.user.toggle()">toggle</button>
 
   <template n-for="review in store.pizza.reviews">
-    <li n-text="review">Zinzin</li>
+    <div>
+      <li n-text="review">Zinzin</li>
+<template n-for="jo in range(14)">
+  <div>
+    <li n-text="jo"></li>
+  </div>
+  </template>
+    </div>
+  </template>
+
+<template n-for="jo in range(7)">
+  <div>
+    <li n-text="jo"></li>
+  </div>
   </template>
 
   <input n-bind:class="'red' if store.user.show else ''" class="salut bonjour ciao  j " type="text"

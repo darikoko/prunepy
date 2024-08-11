@@ -18,17 +18,28 @@ class Tree:
     def build_tree(self):
         for html_element in document.getElementsByTagName("*"):
             if self.is_prune(html_element):
-                leaf = Leaf(html_element)
+                leaf = Leaf(html_element, {})
                 self.leaves.append(leaf)
+        print("SUCCES")
+
+    def build_latest_leaves(self, element, local_scope):
+        if self.is_prune(element):
+                leaf = Leaf(element, local_scope)
+                self.latest_leaves.append(leaf)
+        for html_element in element.getElementsByTagName("*"):
+            if self.is_prune(html_element):
+                leaf = Leaf(html_element, local_scope)
+                self.latest_leaves.append(leaf)
+        pass
 
 
 class Leaf:
-    def __init__(self, html_element) -> None:
+    def __init__(self, html_element, local_scope={}) -> None:
         self.html_element = html_element
         self.directives: dict[str, str] = {}
         self.initial_html_classes = self.html_element.classList.value
         self.initial_n_for_content = None
-        self.local_scope = {}
+        self.local_scope = local_scope
         self.find_directives()
 
     def get_prune_attributes(self) -> list[str]:
