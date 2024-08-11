@@ -29,6 +29,7 @@ class Leaf:
         self.directives: dict[str, str] = {}
         self.initial_html_classes = self.html_element.classList.value
         self.initial_n_for_content = None
+        self.local_scope = {}
         self.find_directives()
 
     def get_prune_attributes(self) -> list[str]:

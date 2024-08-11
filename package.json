@@ -2,6 +2,7 @@
   "files": {
     "/src/prune.py": "./prune.py",
     "/src/store.py": "./store.py",
-    "/src/tree.py": "./tree.py"
+    "/src/tree.py": "./tree.py",
+    "/src/parser.py": "./parser.py"
   }
 }

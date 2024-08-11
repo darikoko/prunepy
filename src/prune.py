@@ -1,5 +1,6 @@
 from store import Store
 from tree import Tree, Leaf
+from parser import extract_loop
 
 
 def notify(func):
@@ -46,7 +47,16 @@ class Prune:
         for leaf in self.tree.leaves:
             self.process_leaf(leaf)
         for leaf in self.tree.latest_leaves:
+            print(leaf.local_scope,"okay")
             self.process_leaf(leaf)
+            
+
+    @staticmethod
+    def for_loop_string(iteration_name:str, list_name:str):
+        local_scope = extract_loop(iteration_name)
+        text = f"""for {iteration_name} in {list_name}:\n\tclone = template.content.cloneNode(True)\n\tinserted_html_element = template.parentNode.insertBefore(clone.children[0], template.nextSibling)\n\tleaf = Leaf(inserted_html_element)\n\tleaf.local_scope={local_scope}\n\tself.tree.latest_leaves.append(leaf)\n\t"""
+        print(text)
+        return text
 
     def process_leaf(self, leaf):
         for directive_name, directive_value in leaf.directives.items():
@@ -54,7 +64,7 @@ class Prune:
                 print(directive_value)
 
                 leaf.html_element.innerText = eval(
-                    directive_value, Prune.global_scope, self.tree_scope
+                    directive_value, Prune.global_scope, leaf.local_scope
                 )
             elif directive_name == "n-html":
                 leaf.html_element.innerHTML = eval(
@@ -86,17 +96,11 @@ class Prune:
                     )
             elif directive_name == "n-for":
                 iteration_name, list_name = directive_value.split(" in ")
-                list_element = eval(list_name, Prune.global_scope, self.tree_scope)
                 template = leaf.html_element
-                for index, i in reversed(list(enumerate(list_element))):
-                    clone = template.content.cloneNode(True)
-                    inserted_html_element = template.parentNode.insertBefore(
-                        clone.children[0], template.nextSibling
-                    )
-                    leaf = Leaf(inserted_html_element)
-                    leaf.replace_iteration_variable(
-                        iteration_name, f"{list_name}[{index}]"
-                    )
-                    self.tree.latest_leaves.append(leaf)
+                exec(Prune.for_loop_string(iteration_name, list_name), Prune.global_scope,{"leaf":leaf,"template":template, "Leaf": Leaf, "self":self})
             else:
                 pass
+
+        
+
+    
