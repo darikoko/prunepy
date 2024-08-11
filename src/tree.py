@@ -5,7 +5,6 @@ class Tree:
     def __init__(self) -> None:
         self.leaves: list[Leaf] = []
         self.latest_leaves: list[Leaf] = []
-        self.tree_scope: dict[str, any] = {}
         self.build_tree()
 
     def is_prune(self, element) -> bool:
@@ -33,15 +32,6 @@ class Leaf:
         self.find_directives()
 
     def get_prune_attributes(self) -> list[str]:
-        print([
-            attribute.name
-            for attribute in self.html_element.attributes
-            if (
-                attribute.name.startswith("n-")
-                or attribute.name.startswith("@")
-                or attribute.name.startswith(":")
-            )
-        ])
         return [
             attribute.name
             for attribute in self.html_element.attributes
@@ -51,18 +41,6 @@ class Leaf:
                 or attribute.name.startswith(":")
             )
         ]
-
-    def replace_iteration_variable(self, iteration_name, list_name):
-        print(self.directives)
-        for attribute in self.get_prune_attributes():
-            new_value = self.html_element.getAttribute(attribute).replace(
-                iteration_name, list_name
-            )
-            self.directives[attribute] = new_value
-            # Inutile mais plus clair dans l'html
-            self.html_element.setAttribute(attribute, new_value)
-            pass
-        pass
 
     def find_directives(self):
         for directive in self.get_prune_attributes():
