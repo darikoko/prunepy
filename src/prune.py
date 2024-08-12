@@ -57,7 +57,7 @@ class Prune:
         local_scope = extract_loop(iteration_name)
         # chercher dans le content du template tous les elements à parser comme on le fait dans le render normal
         # le queryselector chope pas ce qu'il y a dans template
-        text = f"""for {iteration_name} in reversed({list_name}):\n\tclone = template.content.cloneNode(True)\n\tinserted_html_element = template.parentNode.insertBefore(clone.children[0], template.nextSibling)\n\tself.tree.build_latest_leaves(inserted_html_element, {local_scope})"""
+        text = f"""for {iteration_name} in reversed(list({list_name})):\n\tclone = template.content.cloneNode(True)\n\tinserted_html_element = template.parentNode.insertBefore(clone.children[0], template.nextSibling)\n\tself.tree.build_latest_leaves(inserted_html_element, {local_scope})"""
         return text
 
     def process_leaf(self, leaf):

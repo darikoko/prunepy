@@ -31,17 +31,24 @@ class User:
     def show_text(self,text):
         print(text)
 
+
+class Task:
+    def __init__(self,text:str, done:bool  = False) -> None:
+        self.text = text
+        self.done = done
+
 class Todo:
     def __init__(self) -> None:
-        self.tasks:list[str] = ["vachemnt","spura"]
+        self.tasks:list[Task] = []
 
     @notify
     def add_task(self, input) -> None:
-        self.tasks.append(input.value)
+        self.tasks.append(Task(input.value))
         input.value = ""
 
     @notify
     def remove_task(self, index:int):
+        print(index)
         self.tasks.pop(index)
         pass
 

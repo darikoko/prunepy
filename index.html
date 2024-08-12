@@ -17,8 +17,8 @@
   <input id="task" type="text" placeholder="add item..." n-ref="taskinput">
   <button @click="store.todo.add_task(refs['taskinput'])">Add task</button>
 
-  <template n-for="(index,task) in list(enumerate(store.todo.tasks))">
-    <li n-text="task" n-on:click="store.todo.remove_task(index)"></li>
+  <template n-for="(index,task) in enumerate(store.todo.tasks)">
+    <li n-text="task.text" :class="'done' if task.done else ''" n-on:click="store.todo.remove_task(index)"></li>
   </template>
   <p n-show="store.user.show">helloo</p>
   <p n-show="store.user.pseudo">helloo</p>
@@ -53,6 +53,9 @@
   <style>
     .red{
       background:red;
+    }
+    .done{
+      color:pink;
     }
   </style>
 
