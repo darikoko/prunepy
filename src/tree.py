@@ -29,13 +29,11 @@ class Tree:
         if self.is_prune(element):
                 leaf = Leaf(element, new_scope)
                 leaf.html_element.pruneLocalScope = local_scope
-                print(leaf,leaf.html_element, leaf.html_element.outerHTML)
                 self.latest_leaves.append(leaf)
         for html_element in element.getElementsByTagName("*"):
             if self.is_prune(html_element):
                 leaf = Leaf(html_element, new_scope)
                 leaf.html_element.pruneLocalScope = local_scope
-                print(leaf,leaf.html_element, leaf.html_element.outerHTML)
                 self.latest_leaves.append(leaf)
 
 

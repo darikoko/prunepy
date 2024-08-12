@@ -48,10 +48,8 @@ class Prune:
         self.remove_latest_leaves()
         for leaf in self.tree.leaves:
             self.process_leaf(leaf)
-            print(leaf.html_element)
         for leaf in self.tree.latest_leaves:
             self.process_leaf(leaf)
-            print(leaf.html_element)
             
 
     @staticmethod
@@ -65,8 +63,6 @@ class Prune:
     def process_leaf(self, leaf):
         for directive_name, directive_value in leaf.directives.items():
             if directive_name == "n-text":
-                leaf.html_element.pruneText = "coucoussss"
-                print(leaf.html_element.pruneText)
                 leaf.html_element.innerText = eval(
                     directive_value, Prune.global_scope, leaf.local_scope
                 )

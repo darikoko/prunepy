@@ -50,14 +50,7 @@ user = User("darikol")
 todo = Todo()
 prunoe = Prune( pizza=pizza, user=user, todo=todo)
 
-def go_event(event):
-    print(event.target, "H1 AGAIN")
-    print(event.target.pruneText)
 
-h1 = document.querySelector("h1")
-h1.pruneText = "Hello"
-print(h1, "H1", h1.outerHTML)
-h1.addEventListener("click", go_event)
 
 
 
