@@ -1,6 +1,5 @@
 from prune import Prune, notify
 from pyscript import fetch, document
-import asyncio
 
 
 
@@ -48,9 +47,12 @@ class Todo:
 
     @notify
     def remove_task(self, index:int):
-        print(index)
         self.tasks.pop(index)
-        pass
+
+    @notify
+    def complete_task(self, index:int):
+        task = self.tasks[index]
+        task.done = not task.done
 
 pizza = Pizza("XL", "Peperonni")
 user = User("darikol")

@@ -25,8 +25,6 @@ class Tree:
     def build_latest_leaves(self, element, local_scope):
         self.local_scope.update(local_scope)
         new_scope = self.local_scope.copy()
-        #self.local_scope = new_scope.update(local_scope)
-        #if self.is_prune(element):
         leaf = Leaf(element, new_scope)
         leaf.html_element.pruneLocalScope = local_scope
         self.latest_leaves.append(leaf)
