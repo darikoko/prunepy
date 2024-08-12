@@ -28,18 +28,18 @@
 
   <template n-for="review in store.pizza.reviews">
     <div>
-      <li n-text="review">Zinzin</li>
-<template n-for="jo in range(14)">
-  <div>
-    <li n-text="jo"></li>
-  </div>
-  </template>
+      <p n-text="review"></p>
+        <template n-for="jo in range(3)">
+        <div>
+          <li n-text="jo"></li>
+        </div>
+        </template>
     </div>
   </template>
 
-<template n-for="jo in range(7)">
+<template n-for="b in range(7)">
   <div>
-    <li n-text="jo"></li>
+    <li n-text="b"></li>
   </div>
   </template>
 

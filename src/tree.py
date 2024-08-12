@@ -6,6 +6,7 @@ class Tree:
         self.leaves: list[Leaf] = []
         self.latest_leaves: list[Leaf] = []
         self.build_tree()
+        self.local_scope = {}
 
     def is_prune(self, element) -> bool:
         for attribute in element.attributes:
@@ -23,14 +24,18 @@ class Tree:
         print("SUCCES")
 
     def build_latest_leaves(self, element, local_scope):
+        print(element,"ELE?ENT")
+        self.local_scope.update(local_scope)
+        new_scope = self.local_scope.copy()
+        #self.local_scope = new_scope.update(local_scope)
+        print("NEW SCOPE", new_scope, local_scope)
         if self.is_prune(element):
-                leaf = Leaf(element, local_scope)
+                leaf = Leaf(element, new_scope)
                 self.latest_leaves.append(leaf)
         for html_element in element.getElementsByTagName("*"):
             if self.is_prune(html_element):
-                leaf = Leaf(html_element, local_scope)
+                leaf = Leaf(html_element, new_scope)
                 self.latest_leaves.append(leaf)
-        pass
 
 
 class Leaf:

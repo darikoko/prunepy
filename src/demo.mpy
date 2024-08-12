@@ -30,7 +30,7 @@ class User:
 
 class Todo:
     def __init__(self) -> None:
-        self.tasks:list[str] = []
+        self.tasks:list[str] = ["vachemnt","spura"]
 
     @notify
     def add_task(self, input) -> None:

@@ -3,6 +3,8 @@ from tree import Tree, Leaf
 from parser import extract_loop
 
 
+
+
 def notify(func):
     def wrapper(self, *args, **kwargs):
         func(self, *args, **kwargs)
@@ -38,8 +40,10 @@ class Prune:
     def remove_latest_leaves(self):
         for leaf in self.tree.latest_leaves:
             leaf.html_element.remove()
+        self.tree.latest_leaves = []
 
     def render(self):
+        print("VEFO")
         self.remove_latest_leaves()
         for leaf in self.tree.leaves:
             self.process_leaf(leaf)
@@ -52,7 +56,7 @@ class Prune:
         local_scope = extract_loop(iteration_name)
         # chercher dans le content du template tous les elements à parser comme on le fait dans le render normal
         # le queryselector chope pas ce qu'il y a dans template
-        text = f"""for {iteration_name} in reversed({list_name}):\n\tclone = template.content.cloneNode(True)\n\tinserted_html_element = template.parentNode.insertBefore(clone.children[0], template.nextSibling)\n\tself.tree.build_latest_leaves(inserted_html_element, {local_scope})"""
+        text = f"""for {iteration_name} in reversed({list_name}):\n\tclone = template.content.cloneNode(True)\n\tprint(template.innerHTML)\n\tinserted_html_element = template.parentNode.insertBefore(clone.children[0], template.nextSibling)\n\tself.tree.build_latest_leaves(inserted_html_element, {local_scope})"""
         print(text)
         return text
 
