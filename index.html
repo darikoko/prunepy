@@ -18,7 +18,10 @@
   <button @click="store.todo.add_task(refs['taskinput'])">Add task</button>
 
   <template n-for="(index,task) in enumerate(store.todo.tasks)">
-    <li n-text="task.text" :class="'done' if task.done else ''" n-on:click="store.todo.remove_task(index)"></li>
+    <div>
+      <li n-text="task.text" :class="'done' if task.done else ''" @click="store.todo.remove_task(index)"></li>
+      <button>helo</button>
+    </div>
   </template>
   <p n-show="store.user.show">helloo</p>
   <p n-show="store.user.pseudo">helloo</p>
