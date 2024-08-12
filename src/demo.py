@@ -1,5 +1,5 @@
 from prune import Prune, notify
-from pyscript import fetch, document
+from pyscript import fetch, document, window
 
 
 
@@ -54,11 +54,27 @@ class Todo:
         task = self.tasks[index]
         task.done = not task.done
 
+
+class Clock:
+    def __init__(self) -> None:
+        self.seconds_deg = 0
+        self.minutes_deg = 0
+        self.hours_deg = 0
+        window.setInterval(self.say_coucou, 1000, "OK")
+
+    def say_coucou(self,time):
+        self.seconds_deg += 360/60
+        self.minutes_deg += 360/60/60
+        print(self.__dict__)
+        print("coucou")
+
 pizza = Pizza("XL", "Peperonni")
 user = User("darikol")
 todo = Todo()
 prunoe = Prune( pizza=pizza, user=user, todo=todo)
 
+
+clock = Clock()
 
 
 

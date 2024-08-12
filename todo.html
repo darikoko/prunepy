@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>🦜 Polyglot - Piratical PyScript</title>
+    <link rel="stylesheet" href="https://pyscript.net/releases/2024.8.1/core.css">
+    <script type="module" src="https://pyscript.net/releases/2024.8.1/core.js"></script>
+</head>
+
+<body{inside_loop_text[0]:i}>
+
+    <h1>TODO LIST</h1>
+
+    <input id="task" type="text" placeholder="add item..." n-ref="taskinput">
+    <button @click="store.todo.add_task(refs['taskinput'])">Add task</button>
+
+    <ul>
+
+        <template n-for="(index,task) in enumerate(store.todo.tasks)">
+            <li>
+                <span n-text="task.text" :class="'done' if task.done else ''"></span>
+                <button @click="store.todo.complete_task(index)"
+                    n-text="'Complete' if not task.done else 'Pending'"></button>
+                <button @click="store.todo.remove_task(index)">Delete</button>
+            </li>
+        </template>
+
+    </ul>
+    <script type="mpy" src="/src/demo.py" config="./package.json" async></script>
+    <style>
+        .done {
+            text-decoration: line-through;
+        }
+    </style>
+
+
+    </body>
+
+</html>

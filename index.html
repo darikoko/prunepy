@@ -19,8 +19,9 @@
 
   <template n-for="(index,task) in enumerate(store.todo.tasks)">
     <div>
-      <li n-text="task.text" :class="'done' if task.done else ''" @click="store.todo.remove_task(index)"></li>
-      <button @click="store.todo.complete_task(index)">helo</button>
+      <li n-text="task.text" :class="'done' if task.done else ''"></li>
+      <button @click="store.todo.complete_task(index)" n-text="'Complete' if not task.done else 'Pending'"></button>
+      <button @click="store.todo.remove_task(index)">Delete</button>
     </div>
   </template>
   <p n-show="store.user.show">helloo</p>
@@ -33,32 +34,32 @@
   <template n-for="review in store.pizza.reviews">
     <div>
       <p n-text="review"></p>
-        <template n-for="jo in range(3)">
+      <template n-for="jo in range(3)">
         <div>
           <li n-text="jo"></li>
         </div>
-        </template>
+      </template>
     </div>
   </template>
 
-<template n-for="b in range(7)">
-  <div>
-    <li n-text="b"></li>
-  </div>
+  <template n-for="b in range(7)">
+    <div>
+      <li n-text="b"></li>
+    </div>
   </template>
 
-  <input n-bind:class="'red' if store.user.show else ''" class="salut bonjour ciao  j " type="text"
-    n-bind:placeholder="store.pizza.taste"
-    n-on:input="store.pizza.change_by_value(event.target.value)" />
+  <input :class="'red' if store.user.show else ''" class="salut bonjour ciao  j " type="text"
+    :placeholder="store.pizza.taste" @input="store.pizza.change_by_value(event.target.value)" />
   <div id="output"></div>
   <!-- Dont forget to add async attribute to script tag to use await etc in pyscript-->
   <script type="mpy" src="/src/demo.py" config="./package.json" async></script>
   <style>
-    .red{
-      background:red;
+    .red {
+      background: red;
     }
-    .done{
-      color:pink;
+
+    .done {
+      text-decoration: line-through;
     }
   </style>
 
