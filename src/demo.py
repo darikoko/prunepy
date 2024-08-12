@@ -28,26 +28,36 @@ class User:
     def toggle(self):
         self.show = not self.show
 
+    def show_text(self,text):
+        print(text)
+
 class Todo:
     def __init__(self) -> None:
         self.tasks:list[str] = ["vachemnt","spura"]
 
     @notify
     def add_task(self, input) -> None:
-        print("ON GO")
         self.tasks.append(input.value)
         input.value = ""
+
+    @notify
+    def remove_task(self, index:int):
+        self.tasks.pop(index)
+        pass
 
 pizza = Pizza("XL", "Peperonni")
 user = User("darikol")
 todo = Todo()
-print(f"{todo=}")
-a = 12
-b = 14
-c = a if b < 10 else 20
-for (i) in (a,b):
-    print(f"{i=}")
 prunoe = Prune( pizza=pizza, user=user, todo=todo)
+
+def go_event(event):
+    print(event.target, "H1 AGAIN")
+    print(event.target.pruneText)
+
+h1 = document.querySelector("h1")
+h1.pruneText = "Hello"
+print(h1, "H1", h1.outerHTML)
+h1.addEventListener("click", go_event)
 
 
 

@@ -21,20 +21,21 @@ class Tree:
             if self.is_prune(html_element):
                 leaf = Leaf(html_element, {})
                 self.leaves.append(leaf)
-        print("SUCCES")
 
     def build_latest_leaves(self, element, local_scope):
-        print(element,"ELE?ENT")
         self.local_scope.update(local_scope)
         new_scope = self.local_scope.copy()
         #self.local_scope = new_scope.update(local_scope)
-        print("NEW SCOPE", new_scope, local_scope)
         if self.is_prune(element):
                 leaf = Leaf(element, new_scope)
+                leaf.html_element.pruneLocalScope = local_scope
+                print(leaf,leaf.html_element, leaf.html_element.outerHTML)
                 self.latest_leaves.append(leaf)
         for html_element in element.getElementsByTagName("*"):
             if self.is_prune(html_element):
                 leaf = Leaf(html_element, new_scope)
+                leaf.html_element.pruneLocalScope = local_scope
+                print(leaf,leaf.html_element, leaf.html_element.outerHTML)
                 self.latest_leaves.append(leaf)
 
 
@@ -64,4 +65,3 @@ class Leaf:
                 attribute_value := self.html_element.getAttribute(directive)
             ) is not None:
                 self.directives[directive] = attribute_value
-        print(self.directives)

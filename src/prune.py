@@ -35,7 +35,9 @@ class Prune:
         # Au cas ou la syntaxe @ est utlilisée
         if function is None:
             function = event.target.getAttribute("@" + event.type)
-        eval(function, Prune.global_scope, {"event": event})
+        # Passer le local_scope ici
+        local_scope = {"event": event} | event.target.pruneLocalScope if hasattr(event.target, "pruneLocalScope") else {"event":event}
+        eval(function, Prune.global_scope, local_scope)
 
     def remove_latest_leaves(self):
         for leaf in self.tree.latest_leaves:
@@ -43,12 +45,13 @@ class Prune:
         self.tree.latest_leaves = []
 
     def render(self):
-        print("VEFO")
         self.remove_latest_leaves()
         for leaf in self.tree.leaves:
             self.process_leaf(leaf)
+            print(leaf.html_element)
         for leaf in self.tree.latest_leaves:
             self.process_leaf(leaf)
+            print(leaf.html_element)
             
 
     @staticmethod
@@ -56,13 +59,14 @@ class Prune:
         local_scope = extract_loop(iteration_name)
         # chercher dans le content du template tous les elements à parser comme on le fait dans le render normal
         # le queryselector chope pas ce qu'il y a dans template
-        text = f"""for {iteration_name} in reversed({list_name}):\n\tclone = template.content.cloneNode(True)\n\tprint(template.innerHTML)\n\tinserted_html_element = template.parentNode.insertBefore(clone.children[0], template.nextSibling)\n\tself.tree.build_latest_leaves(inserted_html_element, {local_scope})"""
-        print(text)
+        text = f"""for {iteration_name} in reversed({list_name}):\n\tclone = template.content.cloneNode(True)\n\tinserted_html_element = template.parentNode.insertBefore(clone.children[0], template.nextSibling)\n\tself.tree.build_latest_leaves(inserted_html_element, {local_scope})"""
         return text
 
     def process_leaf(self, leaf):
         for directive_name, directive_value in leaf.directives.items():
             if directive_name == "n-text":
+                leaf.html_element.pruneText = "coucoussss"
+                print(leaf.html_element.pruneText)
                 leaf.html_element.innerText = eval(
                     directive_value, Prune.global_scope, leaf.local_scope
                 )

@@ -17,14 +17,15 @@
   <input id="task" type="text" placeholder="add item..." n-ref="taskinput">
   <button @click="store.todo.add_task(refs['taskinput'])">Add task</button>
 
-  <template n-for="task in store.todo.tasks">
-    <li n-text="task"></li>
+  <template n-for="(index,task) in list(enumerate(store.todo.tasks))">
+    <li n-text="task" n-on:click="store.todo.remove_task(index)"></li>
   </template>
   <p n-show="store.user.show">helloo</p>
   <p n-show="store.user.pseudo">helloo</p>
   <p n-html="store.pizza.taste">helloo</p>
   <button id="ok">demo</button>
   <button n-on:click="store.user.toggle()">toggle</button>
+  <button n-on:click="store.user.show_text('salut')">SHOW</button>
 
   <template n-for="review in store.pizza.reviews">
     <div>
@@ -48,7 +49,7 @@
     n-on:input="store.pizza.change_by_value(event.target.value)" />
   <div id="output"></div>
   <!-- Dont forget to add async attribute to script tag to use await etc in pyscript-->
-  <script type="mpy" src="/src/demo.mpy" config="./package.json" async></script>
+  <script type="mpy" src="/src/demo.py" config="./package.json" async></script>
   <style>
     .red{
       background:red;

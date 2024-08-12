@@ -14,5 +14,4 @@ class Store:
 
     def save_history(self) -> None:
         self.slices_history.append(self.format_history())
-        print(self.slices_history)
 
