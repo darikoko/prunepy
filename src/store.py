@@ -1,5 +1,3 @@
-
-
 class Store:
     # Nécessaire pour le démarrage
     slices_history: list[dict[str, dict[str, str]]] = []
@@ -14,4 +12,3 @@ class Store:
 
     def save_history(self) -> None:
         self.slices_history.append(self.format_history())
-

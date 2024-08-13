@@ -13,16 +13,16 @@
 
     <h1>TODO LIST</h1>
 
-    <input id="task" type="text" placeholder="add item..." n-ref="taskinput">
+    <input id="task" type="text" placeholder="add item..." p-ref="taskinput">
     <button @click="store.todo.add_task(refs['taskinput'])">Add task</button>
 
     <ul>
 
-        <template n-for="(index,task) in enumerate(store.todo.tasks)">
+        <template p-for="(index,task) in enumerate(store.todo.tasks)">
             <li>
-                <span n-text="task.text" :class="'done' if task.done else ''"></span>
+                <span p-text="task.text" :class="'done' if task.done else ''"></span>
                 <button @click="store.todo.complete_task(index)"
-                    n-text="'Complete' if not task.done else 'Pending'"></button>
+                    p-text="'Complete' if not task.done else 'Pending'"></button>
                 <button @click="store.todo.remove_task(index)">Delete</button>
             </li>
         </template>

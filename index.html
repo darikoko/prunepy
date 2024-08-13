@@ -14,37 +14,37 @@
   <h1>Polyglot 🦜 💬 🇬🇧 ➡️ 🏴‍☠️</h1>
   <h1>TODO LIST</h1>
 
-  <input id="task" type="text" placeholder="add item..." n-ref="taskinput">
+  <input id="task" type="text" placeholder="add item..." p-ref="taskinput">
   <button @click="store.todo.add_task(refs['taskinput'])">Add task</button>
 
-  <template n-for="(index,task) in enumerate(store.todo.tasks)">
+  <template p-for="(index,task) in enumerate(store.todo.tasks)">
     <div>
-      <li n-text="task.text" :class="'done' if task.done else ''"></li>
-      <button @click="store.todo.complete_task(index)" n-text="'Complete' if not task.done else 'Pending'"></button>
+      <li p-text="task.text" :class="'done' if task.done else ''"></li>
+      <button @click="store.todo.complete_task(index)" p-text="'Complete' if not task.done else 'Pending'"></button>
       <button @click="store.todo.remove_task(index)">Delete</button>
     </div>
   </template>
-  <p n-show="store.user.show">helloo</p>
-  <p n-show="store.user.pseudo">helloo</p>
-  <p n-html="store.pizza.taste">helloo</p>
+  <p p-show="store.user.show">helloo</p>
+  <p p-show="store.user.pseudo">helloo</p>
+  <p p-html="store.pizza.taste">helloo</p>
   <button id="ok">demo</button>
-  <button n-on:click="store.user.toggle()">toggle</button>
-  <button n-on:click="store.user.show_text('salut')">SHOW</button>
+  <button p-on:click="store.user.toggle()">toggle</button>
+  <button p-on:click="store.user.show_text('salut')">SHOW</button>
 
-  <template n-for="review in store.pizza.reviews">
+  <template p-for="review in store.pizza.reviews">
     <div>
-      <p n-text="review"></p>
-      <template n-for="jo in range(3)">
+      <p p-text="review"></p>
+      <template p-for="jo in range(3)">
         <div>
-          <li n-text="jo"></li>
+          <li p-text="jo"></li>
         </div>
       </template>
     </div>
   </template>
 
-  <template n-for="b in range(7)">
+  <template p-for="b in range(7)">
     <div>
-      <li n-text="b"></li>
+      <li p-text="b"></li>
     </div>
   </template>
 

@@ -10,7 +10,7 @@ class Tree:
 
     def is_prune(self, element) -> bool:
         for attribute in element.attributes:
-            if attribute.name.startswith("n-") or attribute.name.startswith("@") or attribute.name.startswith(":"):
+            if attribute.name.startswith("p-") or attribute.name.startswith("@") or attribute.name.startswith(":"):
                 return True
         return False
 
@@ -49,7 +49,7 @@ class Leaf:
             attribute.name
             for attribute in self.html_element.attributes
             if (
-                attribute.name.startswith("n-")
+                attribute.name.startswith("p-")
                 or attribute.name.startswith("@")
                 or attribute.name.startswith(":")
             )

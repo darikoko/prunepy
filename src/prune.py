@@ -3,8 +3,6 @@ from tree import Tree, Leaf
 from parser import extract_loop
 
 
-
-
 def notify(func):
     def wrapper(self, *args, **kwargs):
         func(self, *args, **kwargs)
@@ -31,7 +29,7 @@ class Prune:
 
     @staticmethod
     def handle_event(event):
-        function = event.target.getAttribute("n-on:" + event.type)
+        function = event.target.getAttribute("p-on:" + event.type)
         # Au cas ou la syntaxe @ est utlilisée
         if function is None:
             function = event.target.getAttribute("@" + event.type)
@@ -50,7 +48,7 @@ class Prune:
             self.process_leaf(leaf)
         for leaf in self.tree.latest_leaves:
             self.process_leaf(leaf)
-            
+
 
     @staticmethod
     def for_loop_string(iteration_name:str, list_name:str):
@@ -62,25 +60,25 @@ class Prune:
 
     def process_leaf(self, leaf):
         for directive_name, directive_value in leaf.directives.items():
-            if directive_name == "n-text":
+            if directive_name == "p-text":
                 leaf.html_element.innerText = eval(
                     directive_value, Prune.global_scope, leaf.local_scope
                 )
-            elif directive_name == "n-html":
+            elif directive_name == "p-html":
                 leaf.html_element.innerHTML = eval(
                     directive_value, Prune.global_scope, leaf.local_scope
                 )
-            elif directive_name == "n-show":
+            elif directive_name == "p-show":
                 leaf.html_element.hidden = not eval(
                     directive_value, Prune.global_scope, leaf.local_scope
                 )
-            elif directive_name == "n-ref":
+            elif directive_name == "p-ref":
                 Prune.global_scope["refs"][directive_value] = leaf.html_element
-            elif directive_name.startswith("n-on:") or directive_name.startswith("@"):
-                event_type = directive_name.replace("n-on:", "").replace("@", "")
+            elif directive_name.startswith("p-on:") or directive_name.startswith("@"):
+                event_type = directive_name.replace("p-on:", "").replace("@", "")
                 leaf.html_element.addEventListener(event_type, self.handle_event)
-            elif directive_name.startswith("n-bind:") or directive_name.startswith(":"):
-                attribute_to_bind = directive_name.replace("n-bind:", "").replace(":","")
+            elif directive_name.startswith("p-bind:") or directive_name.startswith(":"):
+                attribute_to_bind = directive_name.replace("p-bind:", "").replace(":","")
                 if attribute_to_bind == "class":
                     leaf.html_element.setAttribute(
                         "class",
@@ -92,13 +90,9 @@ class Prune:
                         attribute_to_bind,
                         eval(directive_value, Prune.global_scope, leaf.local_scope),
                     )
-            elif directive_name == "n-for":
+            elif directive_name == "p-for":
                 iteration_name, list_name = directive_value.split(" in ")
                 template = leaf.html_element
                 exec(Prune.for_loop_string(iteration_name, list_name), Prune.global_scope,{"leaf":leaf,"template":template, "Leaf": Leaf, "self":self})
             else:
                 pass
-
-        
-
-    
