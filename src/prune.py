@@ -51,8 +51,6 @@ class Prune:
     def process_leaf(self, leaf):
         for directive_name, directive_value in leaf.directives.items():
             if directive_name == "p-text":
-                print(leaf.local_scope,"CIIIC")
-                print(leaf.html_element.outerHTML, leaf.local_scope)
                 leaf.html_element.innerText = eval(
                     directive_value, Prune.global_scope, leaf.local_scope
                 )
@@ -96,5 +94,3 @@ class Prune:
                 if eval(directive_value,Prune.global_scope, leaf.local_scope):
                     inserted_html_element = leaf.html_element.parentNode.insertBefore(clone.children[0], leaf.html_element.nextSibling)
                     self.tree.build_latest_leaves(inserted_html_element, {})
-            else:
-                pass
