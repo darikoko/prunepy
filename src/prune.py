@@ -11,6 +11,9 @@ def notify(func):
     return wrapper
 
 
+class Refs:
+    pass
+
 class Prune:
     global_scope = {}
 
@@ -18,7 +21,7 @@ class Prune:
         self.store = Store(**kwargs)
         self.register_app_to_slices()
         self.tree = Tree()
-        Prune.global_scope = {"store": self.store, "refs": {}}
+        Prune.global_scope = {"store": self.store, "refs": Refs()}
         self.render()
 
     def register_app_to_slices(self):
@@ -63,7 +66,8 @@ class Prune:
                     directive_value, Prune.global_scope, leaf.local_scope
                 )
             elif directive_name == "p-ref":
-                Prune.global_scope["refs"][directive_value] = leaf.html_element
+                #Prune.global_scope["refs"][directive_value] = leaf.html_element
+                setattr(Prune.global_scope["refs"], directive_value, leaf.html_element)
             elif directive_name.startswith("p-on:") or directive_name.startswith("@"):
                 event_type = directive_name.replace("p-on:", "").replace("@", "")
                 leaf.html_element.addEventListener(event_type, self.handle_event)

@@ -21,7 +21,7 @@
   </template>
 
   <input id="task" type="text" placeholder="add item..." p-ref="taskinput">
-  <button @click="store.todo.add_task(refs['taskinput'])">Add task</button>
+  <button @click="store.todo.add_task(refs.taskinput)">Add task</button>
 
   <template p-for="(index,task) in enumerate(store.todo.tasks)">
     <div>
