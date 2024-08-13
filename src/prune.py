@@ -89,6 +89,7 @@ class Prune:
                 keys = iteration_name.replace("(","").replace(")","").split(",")
                 my_list =  eval(list_name, Prune.global_scope)
                 for item in reversed(list(my_list)):
+                    # si c'est une for loop avec un seul élément on doit utiliser le 2è choix
                     local_scope = dict(zip(keys, item)) if len(keys) > 1 else dict(zip(keys, (item,)))
                     clone = leaf.html_element.content.cloneNode(True)
                     inserted_html_element = leaf.html_element.parentNode.insertBefore(clone.children[0], leaf.html_element.nextSibling)
