@@ -29,20 +29,5 @@ class Clock:
 clock = Clock()
 prune = Prune( clock=clock)
 
-# Example 'hey' variable
-hey = ('a', 'b', 'c')
 
-# Example list of tuples
-my_list = [(1, 2, 3), (4, 5, 6), (7, 8, 9)]
-
-# Unpacking in a for loop
-for items in my_list:
-    # Unpack dynamically using the length of 'hey'
-    locals().update(dict(zip(hey, items)))
-    print(locals())
-    # Now you can use a, b, c, etc.
-    print(a, b, c)
-
-exec("k = 14")
-print(k)
 
