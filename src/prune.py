@@ -1,6 +1,5 @@
 from store import Store
 from tree import Tree, Leaf
-from parser import extract_loop
 
 
 def notify(func):
@@ -49,18 +48,11 @@ class Prune:
         for leaf in self.tree.latest_leaves:
             self.process_leaf(leaf)
 
-
-    @staticmethod
-    def for_loop_string(iteration_name:str, list_name:str):
-        local_scope = extract_loop(iteration_name)
-        # chercher dans le content du template tous les elements à parser comme on le fait dans le render normal
-        # le queryselector chope pas ce qu'il y a dans template
-        text = f"""for {iteration_name} in reversed(list({list_name})):\n\tclone = leaf.html_element.content.cloneNode(True)\n\tinserted_html_element = leaf.html_element.parentNode.insertBefore(clone.children[0], leaf.html_element.nextSibling)\n\tself.tree.build_latest_leaves(inserted_html_element, {local_scope})"""
-        return text
-
     def process_leaf(self, leaf):
         for directive_name, directive_value in leaf.directives.items():
             if directive_name == "p-text":
+                print(leaf.local_scope,"CIIIC")
+                print(leaf.html_element.outerHTML, leaf.local_scope)
                 leaf.html_element.innerText = eval(
                     directive_value, Prune.global_scope, leaf.local_scope
                 )
@@ -92,6 +84,17 @@ class Prune:
                     )
             elif directive_name == "p-for":
                 iteration_name, list_name = directive_value.split(" in ")
-                exec(Prune.for_loop_string(iteration_name, list_name), Prune.global_scope,{"leaf":leaf, "self":self})
+                keys = iteration_name.replace("(","").replace(")","").split(",")
+                my_list =  eval(list_name, Prune.global_scope)
+                for item in reversed(list(my_list)):
+                    local_scope = dict(zip(keys, item)) if len(keys) > 1 else dict(zip(keys, (item,)))
+                    clone = leaf.html_element.content.cloneNode(True)
+                    inserted_html_element = leaf.html_element.parentNode.insertBefore(clone.children[0], leaf.html_element.nextSibling)
+                    self.tree.build_latest_leaves(inserted_html_element, local_scope)
+            elif directive_name == "p-if":
+                clone = leaf.html_element.content.cloneNode(True)
+                if eval(directive_value,Prune.global_scope, leaf.local_scope):
+                    inserted_html_element = leaf.html_element.parentNode.insertBefore(clone.children[0], leaf.html_element.nextSibling)
+                    self.tree.build_latest_leaves(inserted_html_element, {})
             else:
                 pass

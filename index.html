@@ -14,6 +14,12 @@
   <h1>Polyglot 🦜 💬 🇬🇧 ➡️ 🏴‍☠️</h1>
   <h1>TODO LIST</h1>
 
+  <template p-if="'bonsoir'== 'bonsoie'">
+      <div>
+        <p>Jackkkkkkk bon</p>
+    </div>
+  </template>
+
   <input id="task" type="text" placeholder="add item..." p-ref="taskinput">
   <button @click="store.todo.add_task(refs['taskinput'])">Add task</button>
 
@@ -30,6 +36,7 @@
   <button id="ok">demo</button>
   <button p-on:click="store.user.toggle()">toggle</button>
   <button p-on:click="store.user.show_text('salut')">SHOW</button>
+
 
   <template p-for="review in store.pizza.reviews">
     <div>
