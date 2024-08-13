@@ -55,7 +55,7 @@ class Prune:
         local_scope = extract_loop(iteration_name)
         # chercher dans le content du template tous les elements à parser comme on le fait dans le render normal
         # le queryselector chope pas ce qu'il y a dans template
-        text = f"""for {iteration_name} in reversed(list({list_name})):\n\tclone = template.content.cloneNode(True)\n\tinserted_html_element = template.parentNode.insertBefore(clone.children[0], template.nextSibling)\n\tself.tree.build_latest_leaves(inserted_html_element, {local_scope})"""
+        text = f"""for {iteration_name} in reversed(list({list_name})):\n\tclone = leaf.html_element.content.cloneNode(True)\n\tinserted_html_element = leaf.html_element.parentNode.insertBefore(clone.children[0], leaf.html_element.nextSibling)\n\tself.tree.build_latest_leaves(inserted_html_element, {local_scope})"""
         return text
 
     def process_leaf(self, leaf):
@@ -92,7 +92,6 @@ class Prune:
                     )
             elif directive_name == "p-for":
                 iteration_name, list_name = directive_value.split(" in ")
-                template = leaf.html_element
-                exec(Prune.for_loop_string(iteration_name, list_name), Prune.global_scope,{"leaf":leaf,"template":template, "Leaf": Leaf, "self":self})
+                exec(Prune.for_loop_string(iteration_name, list_name), Prune.global_scope,{"leaf":leaf, "self":self})
             else:
                 pass
