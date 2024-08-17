@@ -1,6 +1,82 @@
-from store import Store
-from tree import Tree, Leaf
+from pyscript import document
 
+class Store:
+    # Nécessaire pour le démarrage
+    slices_history: list[dict[str, dict[str, str]]] = []
+
+    def __init__(self, **kwargs) -> None:
+        for key, value in kwargs.items():
+            setattr(self, key, value)
+        self.save_history()
+
+    def format_history(self) -> dict[str, dict[str, str]]:
+        return {key: value.__dict__ for (key, value) in self.__dict__.items()}.copy()
+
+    def save_history(self) -> None:
+        self.slices_history.append(self.format_history())
+
+
+
+class Tree:
+    def __init__(self) -> None:
+        self.leaves: list[Leaf] = []
+        self.latest_leaves: list[Leaf] = []
+        self.build_tree()
+        self.local_scope = {}
+
+    def is_prune(self, element) -> bool:
+        for attribute in element.attributes:
+            if attribute.name.startswith("p-") or attribute.name.startswith("@") or attribute.name.startswith(":"):
+                return True
+        return False
+
+    # Peut etre selectionner d'abord les div marquees par un attribut pour alleger le parsing
+    # on pourrait faire un attribut zephyr ou autre
+    def build_tree(self):
+        for html_element in document.getElementsByTagName("*"):
+            if self.is_prune(html_element):
+                leaf = Leaf(html_element, {})
+                self.leaves.append(leaf)
+
+    def build_latest_leaves(self, element, local_scope):
+        self.local_scope.update(local_scope)
+        new_scope = self.local_scope.copy()
+        leaf = Leaf(element, new_scope)
+        leaf.html_element.pruneLocalScope = local_scope
+        self.latest_leaves.append(leaf)
+        for html_element in element.getElementsByTagName("*"):
+            if self.is_prune(html_element):
+                leaf = Leaf(html_element, new_scope)
+                leaf.html_element.pruneLocalScope = local_scope
+                self.latest_leaves.append(leaf)
+
+
+class Leaf:
+    def __init__(self, html_element, local_scope={}) -> None:
+        self.html_element = html_element
+        self.directives: dict[str, str] = {}
+        self.initial_html_classes = self.html_element.classList.value
+        self.initial_n_for_content = None
+        self.local_scope = local_scope
+        self.find_directives()
+
+    def get_prune_attributes(self) -> list[str]:
+        return [
+            attribute.name
+            for attribute in self.html_element.attributes
+            if (
+                attribute.name.startswith("p-")
+                or attribute.name.startswith("@")
+                or attribute.name.startswith(":")
+            )
+        ]
+
+    def find_directives(self):
+        for directive in self.get_prune_attributes():
+            if (
+                attribute_value := self.html_element.getAttribute(directive)
+            ) is not None:
+                self.directives[directive] = attribute_value
 
 def notify(func):
     def wrapper(self, *args, **kwargs):
