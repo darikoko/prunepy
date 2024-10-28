@@ -113,7 +113,6 @@ class Prune:
             function = event.currentTarget.getAttribute("@" + event.type)
         # Passer le local_scope ici
         local_scope = {"event": event} | event.currentTarget.pruneLocalScope if hasattr(event.target, "pruneLocalScope") else {"event":event}
-        print(local_scope, event, event.bubbles,local_scope,function)
         eval(function, Prune.global_scope, local_scope)
 
     def remove_latest_leaves(self):
