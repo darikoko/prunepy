@@ -107,12 +107,13 @@ class Prune:
 
     @staticmethod
     def handle_event(event):
-        function = event.target.getAttribute("p-on:" + event.type)
+        function = event.currentTarget.getAttribute("p-on:" + event.type)
         # Au cas ou la syntaxe @ est utlilisée
         if function is None:
-            function = event.target.getAttribute("@" + event.type)
+            function = event.currentTarget.getAttribute("@" + event.type)
         # Passer le local_scope ici
-        local_scope = {"event": event} | event.target.pruneLocalScope if hasattr(event.target, "pruneLocalScope") else {"event":event}
+        local_scope = {"event": event} | event.currentTarget.pruneLocalScope if hasattr(event.target, "pruneLocalScope") else {"event":event}
+        print(local_scope, event, event.bubbles,local_scope,function)
         eval(function, Prune.global_scope, local_scope)
 
     def remove_latest_leaves(self):
