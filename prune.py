@@ -1,4 +1,18 @@
-from pyscript import document
+from pyscript import document,fetch
+import asyncio
+
+async def aexec(code, global_scope, local_scope):
+    print("ssssssssss")
+    # Make an async function with the code and `exec` it
+    print(code)
+    exec(
+        f'async def __ex(event): ' +
+        ''.join(f'\n {l}' for l in code.split('\n')),
+    global_scope, local_scope)
+
+    print(local_scope)
+    # Get `__ex` from local variables, call it and return the result
+    await local_scope['__ex'](local_scope["event"])
 
 class Store:
     # Nécessaire pour le démarrage
@@ -106,14 +120,15 @@ class Prune:
             slice._app = self
 
     @staticmethod
-    def handle_event(event):
+    async def handle_event(event):
         function = event.currentTarget.getAttribute("p-on:" + event.type)
         # Au cas ou la syntaxe @ est utlilisée
         if function is None:
             function = event.currentTarget.getAttribute("@" + event.type)
         # Passer le local_scope ici
         local_scope = {"event": event} | event.currentTarget.pruneLocalScope if hasattr(event.target, "pruneLocalScope") else {"event":event}
-        eval(function, Prune.global_scope, local_scope)
+        await aexec(function , Prune.global_scope, local_scope)
+        #eval(function, Prune.global_scope, local_scope)
 
     def remove_latest_leaves(self):
         for leaf in self.tree.latest_leaves:
@@ -175,3 +190,7 @@ class Prune:
                 if eval(directive_value,Prune.global_scope, leaf.local_scope):
                     inserted_html_element = leaf.html_element.parentNode.insertBefore(clone.children[0], leaf.html_element.nextSibling)
                     self.tree.build_latest_leaves(inserted_html_element, {})
+
+
+
+
