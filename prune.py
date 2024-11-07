@@ -1,17 +1,14 @@
 from pyscript import document,fetch
 import asyncio
+import inspect
 
 async def aexec(code, global_scope, local_scope):
-    print("ssssssssss")
     # Make an async function with the code and `exec` it
-    print(code)
     exec(
         f'async def __ex(event): ' +
         ''.join(f'\n {l}' for l in code.split('\n')),
     global_scope, local_scope)
-
-    print(local_scope)
-    # Get `__ex` from local variables, call it and return the result
+    # Get `__ex` from local_scope and call it 
     await local_scope['__ex'](local_scope["event"])
 
 class Store:
@@ -97,8 +94,17 @@ def notify(func):
         func(self, *args, **kwargs)
         self._app.store.save_history()
         self._app.render()
-
     return wrapper
+
+def notify_async(func):
+    async def wrapper(self, *args, **kwargs):
+        await func(self, *args, **kwargs)
+        self._app.store.save_history()
+        self._app.render()
+    return wrapper
+
+
+
 
 
 class Refs:
