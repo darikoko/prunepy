@@ -1,18 +1,19 @@
-from pyscript import document,fetch
-import asyncio
-import inspect
+from pyscript import document
 
-async def aexec(code, global_scope, local_scope):
-    # Make an async function with the code and `exec` it
+async def aexec(code, merged_scope):
+    # We create this dict to 
+    # be able to call __ex(), because passing it
+    # to the function will make it accessible from local_scope
+    local_scope = {}
     exec(
-        f'async def __ex(event): ' +
+        f'async def __ex(): ' +
         ''.join(f'\n {l}' for l in code.split('\n')),
-    global_scope, local_scope)
+    merged_scope, local_scope)
     # Get `__ex` from local_scope and call it 
-    await local_scope['__ex'](local_scope["event"])
+    await local_scope['__ex']()
 
 class Store:
-    # Nécessaire pour le démarrage
+    # Required for startup
     slices_history: list[dict[str, dict[str, str]]] = []
 
     def __init__(self, **kwargs) -> None:
@@ -41,8 +42,8 @@ class Tree:
                 return True
         return False
 
-    # Peut etre selectionner d'abord les div marquees par un attribut pour alleger le parsing
-    # on pourrait faire un attribut zephyr ou autre
+    # Maybe mark the concerned div with specific attribute
+    # to speedup the startup
     def build_tree(self):
         for html_element in document.getElementsByTagName("*"):
             if self.is_prune(html_element):
@@ -128,13 +129,12 @@ class Prune:
     @staticmethod
     async def handle_event(event):
         function = event.currentTarget.getAttribute("p-on:" + event.type)
-        # Au cas ou la syntaxe @ est utlilisée
+        # In the case where @ is used
         if function is None:
             function = event.currentTarget.getAttribute("@" + event.type)
-        # Passer le local_scope ici
         local_scope = {"event": event} | event.currentTarget.pruneLocalScope if hasattr(event.target, "pruneLocalScope") else {"event":event}
-        await aexec(function , Prune.global_scope, local_scope)
-        #eval(function, Prune.global_scope, local_scope)
+        merged_scope = Prune.global_scope | local_scope
+        await aexec(function , merged_scope)
 
     def remove_latest_leaves(self):
         for leaf in self.tree.latest_leaves:
@@ -163,7 +163,6 @@ class Prune:
                     directive_value, Prune.global_scope, leaf.local_scope
                 )
             elif directive_name == "p-ref":
-                #Prune.global_scope["refs"][directive_value] = leaf.html_element
                 setattr(Prune.global_scope["refs"], directive_value, leaf.html_element)
             elif directive_name.startswith("p-on:") or directive_name.startswith("@"):
                 event_type = directive_name.replace("p-on:", "").replace("@", "")
@@ -183,12 +182,12 @@ class Prune:
                     )
             elif directive_name == "p-for":
                 iteration_name, list_name = directive_value.split(" in ")
-                keys = iteration_name.replace("(","").replace(")","").split(",")
+                keys = iteration_name.replace("(","").replace(")","").replace(" ","").split(",")
                 my_list =  eval(list_name, Prune.global_scope)
                 for item in list(my_list):
-                    # si c'est une for loop avec un seul élément on doit utiliser le 2è choix
+                    # If it's a for loop with only one element we have to use the 2nd choice
                     local_scope = dict(zip(keys, item)) if len(keys) > 1 else dict(zip(keys, (item,)))
-                    # On ajoute le local scope de la leaf pour récupérer des variables d'itérations d'une boucle parent par exemple
+                    # We add the local scope of the leaf to retrieve iteration variables from a parent loop for example
                     local_scope = leaf.local_scope | local_scope 
                     clone = leaf.html_element.content.cloneNode(True)
                     inserted_html_element = leaf.html_element.parentNode.appendChild(clone.children[0])
