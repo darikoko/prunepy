@@ -1,10 +1,13 @@
 from pyscript import document
+import inspect
 
 async def aexec(code, merged_scope):
     # We create this dict to 
     # be able to call __ex(), because passing it
     # to the function will make it accessible from local_scope
     local_scope = {}
+    print(merged_scope)
+    #TODO handle event as parameter
     exec(
         f'async def __ex(): ' +
         ''.join(f'\n {l}' for l in code.split('\n')),
@@ -94,6 +97,7 @@ def notify(func):
     def wrapper(self, *args, **kwargs):
         func(self, *args, **kwargs)
         self._app.store.save_history()
+        self._app.register_app_to_slices_new(self._app.store)
         self._app.render()
     return wrapper
 
@@ -101,30 +105,39 @@ def notify_async(func):
     async def wrapper(self, *args, **kwargs):
         await func(self, *args, **kwargs)
         self._app.store.save_history()
+        self._app.register_app_to_slices_new(self._app.store)
         self._app.render()
     return wrapper
-
-
-
 
 
 class Refs:
     pass
 
+
+
 class Prune:
     global_scope = {}
 
-    def __init__(self, **kwargs) -> None:
+    def __init__(self, global_scope={},**kwargs) -> None:
         self.store = Store(**kwargs)
-        self.register_app_to_slices()
+        self.register_app_to_slices_new(self.store)
         self.tree = Tree()
-        Prune.global_scope = {"store": self.store, "refs": Refs()}
+        Prune.global_scope = {"store": self.store, "refs": Refs()} | global_scope
         self.render()
 
-    def register_app_to_slices(self):
-        for attr in self.store.__dict__:
-            slice = getattr(self.store, attr)
-            slice._app = self
+    def register_app_to_slices_new(self, obj):
+        #TODO get only attributes which are doesnt start with _
+        for attr in [x for x in obj.__dict__ if not x.startswith("_")]:
+            slice = getattr(obj, attr)
+            if hasattr(slice, "__dict__") :  # Check if is an object
+                self.register_app_to_slices_new(slice)  # Recursive call
+                slice._app = self
+            elif isinstance(slice,list):
+                for element in slice:
+                    self.register_app_to_slices_new(element)  # Recursive call
+                    element._app = self
+
+ 
 
     @staticmethod
     async def handle_event(event):
@@ -133,7 +146,7 @@ class Prune:
         if function is None:
             function = event.currentTarget.getAttribute("@" + event.type)
         local_scope = {"event": event} | event.currentTarget.pruneLocalScope if hasattr(event.target, "pruneLocalScope") else {"event":event}
-        merged_scope = Prune.global_scope | local_scope
+        merged_scope = Prune.global_scope | local_scope 
         await aexec(function , merged_scope)
 
     def remove_latest_leaves(self):
