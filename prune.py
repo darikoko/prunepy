@@ -6,8 +6,6 @@ async def aexec(code, merged_scope):
     # be able to call __ex(), because passing it
     # to the function will make it accessible from local_scope
     local_scope = {}
-    print(merged_scope)
-    #TODO handle event as parameter
     exec(
         f'async def __ex(): ' +
         ''.join(f'\n {l}' for l in code.split('\n')),
