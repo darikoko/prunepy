@@ -118,21 +118,21 @@ class Prune:
 
     def __init__(self, global_scope={},**kwargs) -> None:
         self.store = Store(**kwargs)
-        self.register_app_to_slices_new(self.store)
+        self.register_app_to_slices(self.store)
         self.tree = Tree()
         Prune.global_scope = {"store": self.store, "refs": Refs()} | global_scope
         self.render()
 
-    def register_app_to_slices_new(self, obj):
+    def register_app_to_slices(self, obj):
         #TODO get only attributes which are doesnt start with _
         for attr in [x for x in obj.__dict__ if not x.startswith("_")]:
             slice = getattr(obj, attr)
             if hasattr(slice, "__dict__") :  # Check if is an object
-                self.register_app_to_slices_new(slice)  # Recursive call
+                self.register_app_to_slices(slice)  # Recursive call
                 slice._app = self
             elif isinstance(slice,list):
                 for element in slice:
-                    self.register_app_to_slices_new(element)  # Recursive call
+                    self.register_app_to_slices(element)  # Recursive call
                     element._app = self
 
  
