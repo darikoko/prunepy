@@ -23,7 +23,7 @@ class Store:
         self.save_history()
 
     def format_history(self) -> dict[str, dict[str, str]]:
-        return {key: value.__dict__ for (key, value) in self.__dict__.items()}.copy()
+        return {key: value.__dict__ if hasattr(value, "__dict__") else value for (key, value) in self.__dict__.items() }.copy()
 
     def save_history(self) -> None:
         self.slices_history.append(self.format_history())
