@@ -95,7 +95,7 @@ def notify(func):
     def wrapper(self, *args, **kwargs):
         func(self, *args, **kwargs)
         self._app.store.save_history()
-        self._app.register_app_to_slices_new(self._app.store)
+        self._app.register_app_to_slices(self._app.store)
         self._app.render()
     return wrapper
 
@@ -103,7 +103,7 @@ def notify_async(func):
     async def wrapper(self, *args, **kwargs):
         await func(self, *args, **kwargs)
         self._app.store.save_history()
-        self._app.register_app_to_slices_new(self._app.store)
+        self._app.register_app_to_slices(self._app.store)
         self._app.render()
     return wrapper
 
@@ -125,15 +125,18 @@ class Prune:
 
     def register_app_to_slices(self, obj):
         # get only attributes which are doesnt start with _
-        for attr in [x for x in obj.__dict__ if not x.startswith("_")]:
-            slice = getattr(obj, attr)
-            if hasattr(slice, "__dict__") :  # Check if it's an object
-                self.register_app_to_slices(slice)  # Recursive call
-                slice._app = self
-            elif isinstance(slice,list):
-                for element in slice:
-                    self.register_app_to_slices(element)  # Recursive call
-                    element._app = self
+        print("xxxxxxxxxxxxx")
+        if hasattr(obj, "__dict__"):
+            print("BOB")
+            for attr in [x for x in obj.__dict__ if not x.startswith("_")]:
+                slice = getattr(obj, attr)
+                if hasattr(slice, "__dict__") :  # Check if it's an object
+                    self.register_app_to_slices(slice)  # Recursive call
+                    slice._app = self
+                elif isinstance(slice,list):
+                    for element in slice:
+                        self.register_app_to_slices(element)  # Recursive call
+                        element._app = self
 
  
 
