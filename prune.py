@@ -125,9 +125,7 @@ class Prune:
 
     def register_app_to_slices(self, obj):
         # get only attributes which are doesnt start with _
-        print("xxxxxxxxxxxxx")
         if hasattr(obj, "__dict__"):
-            print("BOB")
             for attr in [x for x in obj.__dict__ if not x.startswith("_")]:
                 slice = getattr(obj, attr)
                 if hasattr(slice, "__dict__") :  # Check if it's an object
