@@ -134,7 +134,6 @@ class Prune:
                 elif isinstance(slice,list):
                     for element in slice:
                         self.register_app_to_slices(element)  # Recursive call
-                        element._app = self
 
  
 
@@ -185,7 +184,8 @@ class Prune:
                     leaf.html_element.setAttribute(
                         "class",
                         leaf.initial_html_classes
-                        + eval(directive_value, Prune.global_scope, leaf.local_scope),
+                        # Add space between normal classes and conditionnal classes
+                        + " " + eval(directive_value, Prune.global_scope, leaf.local_scope),
                     )
                 else:
                     leaf.html_element.setAttribute(
